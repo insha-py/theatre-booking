@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getTransporter } from '@/lib/nodemailer';
 import crypto from 'crypto';
 
 export async function POST(request) {
@@ -22,15 +21,30 @@ export async function POST(request) {
       create: { email, code: otp, expiresAt }
     });
 
-    // Send email
-    const transporter = await getTransporter();
-    await transporter.sendMail({
-      from: '"Ashoka Theatre" <no-reply@ashoka.edu.in>',
-      to: email,
-      subject: 'Your Theatre Booking OTP',
-      text: `Your OTP is: ${otp}`,
-      html: `<b>Your OTP is: ${otp}</b>`
+    // Send email using Resend HTTP API instead of Nodemailer
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json({ error: 'System configuration error: Missing Resend API Key.' }, { status: 500 });
+    }
+
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+      },
+      body: JSON.stringify({
+        from: 'Ashoka Theatre <onboarding@resend.dev>',
+        to: [email],
+        subject: 'Your Theatre Booking OTP',
+        html: `<b>Your OTP is: ${otp}</b>`
+      })
     });
+
+    if (!emailResponse.ok) {
+        const errData = await emailResponse.json();
+        console.error('Resend API Error:', errData);
+        return NextResponse.json({ error: 'Failed to dispatch email over API.' }, { status: 500 });
+    }
 
     return NextResponse.json({ message: 'OTP sent successfully' });
   } catch (error) {
