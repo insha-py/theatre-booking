@@ -1,0 +1,367 @@
+'use client';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Script from 'next/script';
+
+export default function Home() {
+  const [step, setStep] = useState(1); // 1: Login, 2: OTP, 3: Seats, 4: Payment, 5: Success
+  const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  // Seat state
+  const [seats, setSeats] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  
+  // Booking state
+  const [bookingDetails, setBookingDetails] = useState(null);
+
+  // Initial fetch for seats when we reach step 3
+  useEffect(() => {
+    if (step === 3) {
+      fetchSeats();
+      const interval = setInterval(fetchSeats, 5000); // Poll every 5s for updates
+      return () => clearInterval(interval);
+    }
+  }, [step]);
+
+  const fetchSeats = async () => {
+    try {
+      const res = await fetch('/api/seats');
+      const data = await res.json();
+      if (data.seats) setSeats(data.seats);
+    } catch(err) {}
+  };
+
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (res.ok) {
+        setStep(2);
+      } else {
+        const { error } = await res.json();
+        alert(error || 'Error sending OTP');
+      }
+    } catch(err) {
+      alert('Internal error');
+    }
+    setLoading(false);
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code: otp })
+      });
+      if (res.ok) {
+        setStep(3); // Proceed to seats
+      } else {
+        const { error } = await res.json();
+        alert(error || 'Invalid OTP');
+      }
+    } catch(err) {
+      alert('Internal error');
+    }
+    setLoading(false);
+  };
+
+  const toggleSeat = (id, status) => {
+    if (status !== 'AVAILABLE') return;
+    if (selectedSeats.includes(id)) {
+      setSelectedSeats(prev => prev.filter(s => s !== id));
+    } else {
+      if (selectedSeats.length >= 2) {
+        alert("You can only select up to 2 seats.");
+        return;
+      }
+      setSelectedSeats(prev => [...prev, id]);
+    }
+  };
+
+  const handleProceedToPayment = async () => {
+    if (selectedSeats.length === 0) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/seats/lock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seatIds: selectedSeats })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setBookingDetails(data);
+        setStep(4);
+      } else {
+        alert(data.error);
+        fetchSeats();
+        setSelectedSeats([]);
+      }
+    } catch(err) {}
+    setLoading(false);
+  };
+
+  const handleRealPayment = async () => {
+    if (!window.Razorpay) {
+      alert('Razorpay SDK failed to load.');
+      return;
+    }
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_replace_me', // You can set this in .env.local
+      amount: bookingDetails.amount * 100, // paise
+      currency: "INR",
+      name: "Ashoka Theatre",
+      description: "Theatre Seat Booking",
+      order_id: bookingDetails.orderId,
+      handler: async function (response) {
+        setLoading(true);
+        try {
+          const res = await fetch('/api/seats/confirm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              bookingId: bookingDetails.bookingId, 
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature || 'mock_signature'
+            })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setBookingDetails(prev => ({ ...prev, qrCode: data.qrCode }));
+            setStep(5);
+          } else {
+            alert(data.error || 'Payment failed or session expired');
+            setStep(3);
+            setSelectedSeats([]);
+          }
+        } catch(err) {
+          alert('Network issue confirming payment');
+        }
+        setLoading(false);
+      },
+      prefill: {
+        email: email
+      },
+      theme: { color: "#10b981" }
+    };
+    const rzp1 = new window.Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+      alert(response.error.description);
+    });
+    rzp1.open();
+  };
+
+  // Rendering Sections
+  const renderLeft = () => {
+    const leftSeats = seats.filter(s => s.section === 'LEFT');
+    let rows = [];
+    for(let r=1; r<=4; r++) {
+      rows.push(leftSeats.filter(s => s.row === r).sort((a,b) => a.number - b.number));
+    }
+    return (
+      <div className="section">
+        {rows.map((row, i) => (
+          <div key={`left-r${i}`} className="row">
+            {row.map(s => (
+              <div 
+                key={s.id} 
+                className={`seat ${s.status === 'AVAILABLE' ? '' : s.status.toLowerCase()} ${selectedSeats.includes(s.id) ? 'selected' : ''}`}
+                onClick={() => toggleSeat(s.id, s.status)}
+                title={`Left Row ${s.row} Seat ${s.number}`}
+              ></div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderMiddle = () => {
+    const middleSeats = seats.filter(s => s.section === 'MIDDLE');
+    let rows = [];
+    for(let r=1; r<=6; r++) {
+      rows.push(middleSeats.filter(s => s.row === r).sort((a,b) => a.number - b.number));
+    }
+    return (
+      <div className="section">
+        {rows.map((row, i) => (
+          <div key={`mid-r${i}`} className="row">
+            {row.map(s => (
+              <div 
+                key={s.id} 
+                className={`seat ${s.status === 'AVAILABLE' ? '' : s.status.toLowerCase()} ${selectedSeats.includes(s.id) ? 'selected' : ''}`}
+                onClick={() => toggleSeat(s.id, s.status)}
+                title={`Middle Row ${s.row} Seat ${s.number}`}
+              ></div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderRight = () => {
+    const rightSeats = seats.filter(s => s.section === 'RIGHT');
+    let rows = [];
+    for(let r=1; r<=4; r++) {
+      rows.push(rightSeats.filter(s => s.row === r).sort((a,b) => a.number - b.number));
+    }
+    return (
+      <div className="section">
+        {rows.map((row, i) => (
+          <div key={`right-r${i}`} className="row">
+            {row.map(s => (
+              <div 
+                key={s.id} 
+                className={`seat ${s.status === 'AVAILABLE' ? '' : s.status.toLowerCase()} ${selectedSeats.includes(s.id) ? 'selected' : ''}`}
+                onClick={() => toggleSeat(s.id, s.status)}
+                title={`Right Row ${s.row} Seat ${s.number}`}
+              ></div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh'}}>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+      {step === 1 && (
+        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px'}}>
+          <h2 style={{marginBottom: '1.5rem', textAlign: 'center'}}>Ashoka Theatre SSO</h2>
+          <form onSubmit={handleSendOtp}>
+            <input 
+              type="email" 
+              className="input-field" 
+              placeholder="user@ashoka.edu.in" 
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit" className="button" disabled={loading}>
+              {loading ? 'Sending...' : 'Send OTP'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {step === 2 && (
+        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px'}}>
+          <h2 style={{marginBottom: '1.5rem', textAlign: 'center'}}>Enter Verification Code</h2>
+          <p style={{marginBottom: '1rem', color: '#94a3b8', fontSize: '0.875rem', textAlign: 'center'}}>
+            OTP sent to {email} (Check your terminal console for this demo!)
+          </p>
+          <form onSubmit={handleVerifyOtp}>
+            <input 
+              type="text" 
+              className="input-field" 
+              placeholder="6-digit code" 
+              value={otp}
+              onChange={e => setOtp(e.target.value)}
+              required
+            />
+            <button type="submit" className="button" disabled={loading}>
+              {loading ? 'Verifying...' : 'Login'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {step === 3 && (
+        <div className="animate-fade-in" style={{width: '100%'}}>
+          <h2 style={{textAlign: 'center', marginBottom: '1rem'}}>Select Your Seats (Max 2)</h2>
+          <p style={{textAlign: 'center', color: '#94a3b8', marginBottom: '2rem'}}>Selected: {selectedSeats.length}/2</p>
+
+          <div className="glass-panel">
+            <div className="screen"></div>
+            
+            {seats.length > 0 ? (
+              <div className="theatre-layout">
+                {renderLeft()}
+                {renderMiddle()}
+                {renderRight()}
+              </div>
+            ) : (
+              <div style={{textAlign: 'center', padding: '2rem'}}>Loading map...</div>
+            )}
+
+            <div className="legend">
+              <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-available)'}}></div> Available</div>
+              <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-selected)'}}></div> Selected</div>
+              <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-locked)'}}></div> In Cart (Locked)</div>
+              <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-booked)'}}></div> Booked</div>
+            </div>
+
+            <div style={{marginTop: '3rem', display: 'flex', justifyContent: 'center'}}>
+              <button 
+                className="button" 
+                style={{maxWidth: '300px'}} 
+                disabled={selectedSeats.length === 0 || loading}
+                onClick={handleProceedToPayment}
+              >
+                Proceed to Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {step === 4 && (
+        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '500px', textAlign: 'center'}}>
+          <h2 style={{marginBottom: '1.5rem'}}>Complete Payment</h2>
+          <div style={{background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '8px', marginBottom: '2rem', textAlign: 'left'}}>
+            <p style={{marginBottom: '0.5rem', color: '#94a3b8'}}>Seats Locked! (Timer: 9:00 remaining)</p>
+            <p><strong>Order ID:</strong> {bookingDetails?.orderId}</p>
+            <p><strong>Total Amount:</strong> INR {bookingDetails?.amount}</p>
+          </div>
+          <button 
+            className="button" 
+            style={{backgroundColor: '#10b981', display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'center'}}
+            onClick={handleRealPayment}
+            disabled={loading}
+          >
+            {loading ? 'Processing...' : 'Pay with Razorpay'}
+          </button>
+          <button 
+            style={{background: 'transparent', color: '#94a3b8', border: 'none', marginTop: '1rem', cursor: 'pointer', textDecoration: 'underline'}}
+            onClick={() => { setStep(3); setSelectedSeats([]); }}
+          >
+            Cancel & go back
+          </button>
+        </div>
+      )}
+
+      {step === 5 && (
+        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px', textAlign: 'center'}}>
+          <h2 style={{marginBottom: '1.5rem', color: '#10b981'}}>Booking Confirmed!</h2>
+          <p style={{marginBottom: '2rem', color: '#94a3b8'}}>Present this QR code at the entrance.</p>
+          
+          <div style={{background: 'white', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '2rem'}}>
+            {bookingDetails?.qrCode && (
+              <img src={bookingDetails.qrCode} alt="Your Ticket QR" width={200} height={200} />
+            )}
+          </div>
+          
+          <button 
+            className="button" 
+            onClick={() => { setStep(3); setSelectedSeats([]); setBookingDetails(null); }}
+          >
+            Book More
+          </button>
+        </div>
+      )}
+
+    </div>
+  );
+}

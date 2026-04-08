@@ -1,0 +1,45 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       String    @id @default(cuid())
+  email    String    @unique
+  bookings Booking[]
+  seats    Seat[]
+}
+
+model OTP {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  code      String
+  expiresAt DateTime
+}
+
+model Seat {
+  id          String    @id @default(cuid())
+  section     String    // "LEFT", "MIDDLE", "RIGHT"
+  row         Int
+  number      Int
+  status      String    @default("AVAILABLE") // "AVAILABLE", "LOCKED", "BOOKED"
+  lockedUntil DateTime?
+  lockedBy    String?   // User Id or temporary tracking token
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id])
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  seats     String   // comma-separated Seat IDs
+  amount    Int
+  paymentId String?
+  status    String   @default("PENDING") // PENDING, CONFIRMED
+  createdAt DateTime @default(now())
+}
