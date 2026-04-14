@@ -21,28 +21,38 @@ export async function POST(request) {
       create: { email, code: otp, expiresAt }
     });
 
-    // Send email using Resend HTTP API instead of Nodemailer
-    if (!process.env.RESEND_API_KEY) {
-      return NextResponse.json({ error: 'System configuration error: Missing Resend API Key.' }, { status: 500 });
+    // Send email using SendGrid HTTP API to bypass Render firewall and recipient restrictions
+    if (!process.env.SENDGRID_API_KEY || !process.env.SENDER_EMAIL) {
+      return NextResponse.json({ error: 'System configuration error: Missing SENDGRID_API_KEY or SENDER_EMAIL.' }, { status: 500 });
     }
 
-    const emailResponse = await fetch('https://api.resend.com/emails', {
+    const emailResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+        'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`
       },
       body: JSON.stringify({
-        from: 'Ashoka Theatre <onboarding@resend.dev>',
-        to: [email],
+        personalizations: [
+          { to: [{ email: email }] }
+        ],
+        from: { 
+          email: process.env.SENDER_EMAIL, 
+          name: 'Ashoka Theatre' 
+        },
         subject: 'Your Theatre Booking OTP',
-        html: `<b>Your OTP is: ${otp}</b>`
+        content: [
+          {
+            type: 'text/html',
+            value: `<b>Your OTP is: ${otp}</b>`
+          }
+        ]
       })
     });
 
     if (!emailResponse.ok) {
-        const errData = await emailResponse.json();
-        console.error('Resend API Error:', errData);
+        const errData = await emailResponse.text();
+        console.error('SendGrid API Error:', errData);
         return NextResponse.json({ error: 'Failed to dispatch email over API.' }, { status: 500 });
     }
 
