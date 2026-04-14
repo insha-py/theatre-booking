@@ -166,21 +166,39 @@ export default function Home() {
   return (
     <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh'}}>
       {step === 1 && (
-        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px'}}>
-          <h2 className="glitch-title">ALL MY FRIENDS ARE CHEATERS</h2>
-          <form onSubmit={handleLogin}>
-            <input 
-              type="email" 
-              className="input-field" 
-              placeholder="user@ashoka.edu.in" 
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
-            <button type="submit" className="button" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
-            </button>
-          </form>
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '600px' }}>
+          
+          {/* Poster Image */}
+          <img 
+            src="/poster.png" 
+            alt="All My Friends Are Cheaters" 
+            style={{ width: '100%', borderRadius: '12px', marginBottom: '1.5rem', boxShadow: '0 10px 40px rgba(0,0,0,0.5)', objectFit: 'cover' }} 
+          />
+
+          {/* Main Title Outside the Box */}
+          <h2 className="glitch-title" style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>
+            ALL MY FRIENDS ARE CHEATERS
+          </h2>
+
+          {/* Login Box */}
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '400px' }}>
+            <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8' }}>
+              Enter your Ashoka email to enter.
+            </p>
+            <form onSubmit={handleLogin}>
+              <input 
+                type="email" 
+                className="input-field" 
+                placeholder="user@ashoka.edu.in" 
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit" className="button" disabled={loading}>
+                {loading ? 'Logging in...' : 'Login'}
+              </button>
+            </form>
+          </div>
         </div>
       )}
 
