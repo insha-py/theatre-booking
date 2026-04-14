@@ -66,11 +66,11 @@ export default function Home() {
     }
   };
 
-  const handleProceedToPayment = async () => {
+  const handleBookSeats = async () => {
     if (selectedSeats.length === 0) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/seats/lock', {
+      const res = await fetch('/api/seats/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ seatIds: selectedSeats })
@@ -78,65 +78,16 @@ export default function Home() {
       const data = await res.json();
       if (res.ok) {
         setBookingDetails(data);
-        setStep(4);
+        setStep(5);
       } else {
-        alert(data.error);
+        alert(data.error || 'Failed to book seats');
         fetchSeats();
         setSelectedSeats([]);
       }
-    } catch(err) {}
-    setLoading(false);
-  };
-
-  const handleRealPayment = async () => {
-    if (!window.Razorpay) {
-      alert('Razorpay SDK failed to load.');
-      return;
+    } catch(err) {
+      alert('Network issue booking seats');
     }
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_replace_me', // You can set this in .env.local
-      amount: bookingDetails.amount * 100, // paise
-      currency: "INR",
-      name: "Ashoka Theatre",
-      description: "Theatre Seat Booking",
-      order_id: bookingDetails.orderId,
-      handler: async function (response) {
-        setLoading(true);
-        try {
-          const res = await fetch('/api/seats/confirm', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              bookingId: bookingDetails.bookingId, 
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature || 'mock_signature'
-            })
-          });
-          const data = await res.json();
-          if (res.ok) {
-            setBookingDetails(prev => ({ ...prev, qrCode: data.qrCode }));
-            setStep(5);
-          } else {
-            alert(data.error || 'Payment failed or session expired');
-            setStep(3);
-            setSelectedSeats([]);
-          }
-        } catch(err) {
-          alert('Network issue confirming payment');
-        }
-        setLoading(false);
-      },
-      prefill: {
-        email: email
-      },
-      theme: { color: "#10b981" }
-    };
-    const rzp1 = new window.Razorpay(options);
-    rzp1.on('payment.failed', function (response){
-      alert(response.error.description);
-    });
-    rzp1.open();
+    setLoading(false);
   };
 
   // Rendering Sections
@@ -214,7 +165,6 @@ export default function Home() {
 
   return (
     <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh'}}>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       {step === 1 && (
         <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px'}}>
           <h2 style={{marginBottom: '1.5rem', textAlign: 'center'}}>Ashoka Theatre SSO</h2>
@@ -266,39 +216,16 @@ export default function Home() {
                 className="button" 
                 style={{maxWidth: '300px'}} 
                 disabled={selectedSeats.length === 0 || loading}
-                onClick={handleProceedToPayment}
+                onClick={handleBookSeats}
               >
-                Proceed to Payment
+                {loading ? 'Processing...' : 'Confirm Booking'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {step === 4 && (
-        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '500px', textAlign: 'center'}}>
-          <h2 style={{marginBottom: '1.5rem'}}>Complete Payment</h2>
-          <div style={{background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '8px', marginBottom: '2rem', textAlign: 'left'}}>
-            <p style={{marginBottom: '0.5rem', color: '#94a3b8'}}>Seats Locked! (Timer: 9:00 remaining)</p>
-            <p><strong>Order ID:</strong> {bookingDetails?.orderId}</p>
-            <p><strong>Total Amount:</strong> INR {bookingDetails?.amount}</p>
-          </div>
-          <button 
-            className="button" 
-            style={{backgroundColor: '#10b981', display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'center'}}
-            onClick={handleRealPayment}
-            disabled={loading}
-          >
-            {loading ? 'Processing...' : 'Pay with Razorpay'}
-          </button>
-          <button 
-            style={{background: 'transparent', color: '#94a3b8', border: 'none', marginTop: '1rem', cursor: 'pointer', textDecoration: 'underline'}}
-            onClick={() => { setStep(3); setSelectedSeats([]); }}
-          >
-            Cancel & go back
-          </button>
-        </div>
-      )}
+
 
       {step === 5 && (
         <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px', textAlign: 'center'}}>
