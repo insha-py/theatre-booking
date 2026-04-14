@@ -87,12 +87,29 @@ body {
 }
 
 /* Seat map grid */
+.theatre-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: thin; /* For Firefox */
+}
+
+.theatre-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.theatre-wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
 .theatre-layout {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 2rem;
-  margin: 3rem 0;
+  margin: 3rem auto;
   perspective: 1000px;
+  min-width: max-content;
 }
 
 .section {
@@ -203,4 +220,14 @@ body {
   width: 16px;
   height: 16px;
   border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .seat {
+    width: 18px;
+    height: 18px;
+  }
+  .theatre-layout {
+    gap: 1rem;
+  }
 }

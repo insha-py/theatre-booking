@@ -4,9 +4,8 @@ import Image from 'next/image';
 import Script from 'next/script';
 
 export default function Home() {
-  const [step, setStep] = useState(1); // 1: Login, 2: OTP, 3: Seats, 4: Payment, 5: Success
+  const [step, setStep] = useState(1); // 1: Login, 3: Seats, 4: Payment, 5: Success
   const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   
   // Seat state
@@ -33,41 +32,20 @@ export default function Home() {
     } catch(err) {}
   };
 
-  const handleSendOtp = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/send-otp', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       });
       if (res.ok) {
-        setStep(2);
+        setStep(3); // Direct transition to seats map
       } else {
         const { error } = await res.json();
-        alert(error || 'Error sending OTP');
-      }
-    } catch(err) {
-      alert('Internal error');
-    }
-    setLoading(false);
-  };
-
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code: otp })
-      });
-      if (res.ok) {
-        setStep(3); // Proceed to seats
-      } else {
-        const { error } = await res.json();
-        alert(error || 'Invalid OTP');
+        alert(error || 'Error logging in');
       }
     } catch(err) {
       alert('Internal error');
@@ -240,7 +218,7 @@ export default function Home() {
       {step === 1 && (
         <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px'}}>
           <h2 style={{marginBottom: '1.5rem', textAlign: 'center'}}>Ashoka Theatre SSO</h2>
-          <form onSubmit={handleSendOtp}>
+          <form onSubmit={handleLogin}>
             <input 
               type="email" 
               className="input-field" 
@@ -250,29 +228,7 @@ export default function Home() {
               required
             />
             <button type="submit" className="button" disabled={loading}>
-              {loading ? 'Sending...' : 'Send OTP'}
-            </button>
-          </form>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px'}}>
-          <h2 style={{marginBottom: '1.5rem', textAlign: 'center'}}>Enter Verification Code</h2>
-          <p style={{marginBottom: '1rem', color: '#94a3b8', fontSize: '0.875rem', textAlign: 'center'}}>
-            OTP sent to {email} (Check your terminal console for this demo!)
-          </p>
-          <form onSubmit={handleVerifyOtp}>
-            <input 
-              type="text" 
-              className="input-field" 
-              placeholder="6-digit code" 
-              value={otp}
-              onChange={e => setOtp(e.target.value)}
-              required
-            />
-            <button type="submit" className="button" disabled={loading}>
-              {loading ? 'Verifying...' : 'Login'}
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
         </div>
@@ -287,10 +243,12 @@ export default function Home() {
             <div className="screen"></div>
             
             {seats.length > 0 ? (
-              <div className="theatre-layout">
-                {renderLeft()}
-                {renderMiddle()}
-                {renderRight()}
+              <div className="theatre-wrapper">
+                <div className="theatre-layout">
+                  {renderLeft()}
+                  {renderMiddle()}
+                  {renderRight()}
+                </div>
               </div>
             ) : (
               <div style={{textAlign: 'center', padding: '2rem'}}>Loading map...</div>
