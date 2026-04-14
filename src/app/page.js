@@ -167,7 +167,7 @@ export default function Home() {
     <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh'}}>
       {step === 1 && (
         <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px'}}>
-          <h2 style={{marginBottom: '1.5rem', textAlign: 'center'}}>Ashoka Theatre SSO</h2>
+          <h2 className="glitch-title">ALL MY FRIENDS ARE CHEATERS</h2>
           <form onSubmit={handleLogin}>
             <input 
               type="email" 
@@ -185,8 +185,8 @@ export default function Home() {
       )}
 
       {step === 3 && (
-        <div className="animate-fade-in" style={{width: '100%'}}>
-          <h2 style={{textAlign: 'center', marginBottom: '1rem'}}>Select Your Seats (Max 2)</h2>
+        <div className="animate-fade-in" style={{width: '100%', maxWidth: '1000px'}}>
+          <h2 className="glitch-title">Select Your Seats</h2>
           <p style={{textAlign: 'center', color: '#94a3b8', marginBottom: '2rem'}}>Selected: {selectedSeats.length}/2</p>
 
           <div className="glass-panel">

@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --seat-available: #334155;
+  --background: #020617; /* Very dark blue */
+  --foreground: #fdf2f8; /* Soft pink-white */
+  --primary: #d946ef; /* Bright magenta/pink */
+  --primary-hover: #c026d3;
+  --seat-available: #1e3a8a; /* Deep neon blue */
   --seat-locked: #eab308;
-  --seat-booked: #ef4444;
-  --seat-selected: #10b981;
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --border: rgba(255, 255, 255, 0.1);
+  --seat-booked: #be123c; /* Dark cinema red */
+  --seat-selected: #f472b6; /* Hot pink */
+  --card-bg: rgba(15, 23, 42, 0.85); /* Darker blue panel */
+  --border: rgba(217, 70, 239, 0.2); /* Pinkish border */
 }
 
 * {
@@ -35,7 +35,20 @@ body {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(217, 70, 239, 0.05);
+}
+
+.glitch-title {
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-shadow: 
+    3px 0px rgba(59, 130, 246, 0.8), /* Blue channel */
+    -3px 0px rgba(220, 38, 38, 0.8),  /* Red channel */
+    0px 2px rgba(16, 185, 129, 0.4);  /* Green hint */
 }
 
 .button {
@@ -92,6 +105,8 @@ body {
   overflow-x: auto;
   padding-bottom: 1rem;
   scrollbar-width: thin; /* For Firefox */
+  margin: 0 -2rem; /* Pull out of the glass panel padding */
+  padding: 0 2rem; /* Add padding back to keep elements away from true edge */
 }
 
 .theatre-wrapper::-webkit-scrollbar {
@@ -229,5 +244,12 @@ body {
   }
   .theatre-layout {
     gap: 1rem;
+  }
+  .theatre-wrapper {
+    margin: 0 -1.5rem; 
+    padding: 0 1.5rem;
+  }
+  .glass-panel {
+    padding: 1.5rem;
   }
 }
