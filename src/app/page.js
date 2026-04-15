@@ -182,8 +182,8 @@ export default function Home() {
 
           {/* Login Box */}
           <div className="glass-panel" style={{ width: '100%', maxWidth: '400px' }}>
-            <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8' }}>
-              Enter your Ashoka email to enter.
+            <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1.1rem' }}>
+              Enter your ashoka email
             </p>
             <form onSubmit={handleLogin}>
               <input 
