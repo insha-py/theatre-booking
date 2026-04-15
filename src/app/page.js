@@ -181,7 +181,7 @@ export default function Home() {
           </h2>
 
           {/* Login Box */}
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '400px' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', zIndex: 10 }}>
             <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1.1rem' }}>
               Enter your ashoka email
             </p>
@@ -198,6 +198,30 @@ export default function Home() {
                 {loading ? 'Logging in...' : 'Login'}
               </button>
             </form>
+          </div>
+
+          {/* Character Posters Row */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '3rem', width: '100%' }}>
+            {['maya', 'bedi', 'noor', 'rv', 'zara'].map((name) => (
+              <img 
+                key={name}
+                src={`/${name}.png`} 
+                alt={name} 
+                style={{ 
+                  width: 'calc(20% - 0.5rem)', 
+                  minWidth: '60px',
+                  maxWidth: '120px',
+                  borderRadius: '6px', 
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.5)', 
+                  objectFit: 'cover',
+                  aspectRatio: '2/3',
+                  filter: 'grayscale(30%) sepia(20%)',
+                  transition: 'transform 0.3s'
+                }} 
+                onMouseOver={e=>e.currentTarget.style.transform='scale(1.05)'}
+                onMouseOut={e=>e.currentTarget.style.transform='scale(1)'}
+              />
+            ))}
           </div>
         </div>
       )}
