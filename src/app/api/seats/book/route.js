@@ -1,17 +1,19 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import QRCode from 'qrcode';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(request) {
   try {
     const { seatIds } = await request.json();
-    const tokenCookie = request.cookies.get('theatre_session');
+    const session = await getServerSession(authOptions);
     
-    if (!tokenCookie) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json({ error: 'Unauthorized. Please sign in with an Ashoka email.' }, { status: 401 });
     }
     
-    const userId = Buffer.from(tokenCookie.value, 'base64').toString('ascii');
+    const userId = session.user.id;
 
     if (!seatIds || !Array.isArray(seatIds) || seatIds.length === 0 || seatIds.length > 2) {
       return NextResponse.json({ error: 'You can only select up to 2 seats.' }, { status: 400 });

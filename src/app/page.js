@@ -2,10 +2,11 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Script from 'next/script';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export default function Home() {
+  const { data: session, status } = useSession();
   const [step, setStep] = useState(1); // 1: Login, 3: Seats, 4: Payment, 5: Success
-  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   
   // Seat state
@@ -15,14 +16,23 @@ export default function Home() {
   // Booking state
   const [bookingDetails, setBookingDetails] = useState(null);
 
+  // Auto login if session exists
+  useEffect(() => {
+    if (status === 'authenticated') {
+      setStep(3);
+    } else if (status === 'unauthenticated') {
+      setStep(1);
+    }
+  }, [status]);
+
   // Initial fetch for seats when we reach step 3
   useEffect(() => {
-    if (step === 3) {
+    if (step === 3 && status === 'authenticated') {
       fetchSeats();
       const interval = setInterval(fetchSeats, 5000); // Poll every 5s for updates
       return () => clearInterval(interval);
     }
-  }, [step]);
+  }, [step, status]);
 
   const fetchSeats = async () => {
     try {
@@ -32,26 +42,7 @@ export default function Home() {
     } catch(err) {}
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      if (res.ok) {
-        setStep(3); // Direct transition to seats map
-      } else {
-        const { error } = await res.json();
-        alert(error || 'Error logging in');
-      }
-    } catch(err) {
-      alert('Internal error');
-    }
-    setLoading(false);
-  };
+
 
   const toggleSeat = (id, status) => {
     if (status !== 'AVAILABLE') return;
@@ -182,22 +173,18 @@ export default function Home() {
 
           {/* Login Box */}
           <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', zIndex: 10 }}>
-            <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1.1rem' }}>
-              Enter your ashoka email
-            </p>
-            <form onSubmit={handleLogin}>
-              <input 
-                type="email" 
-                className="input-field" 
-                placeholder="user@ashoka.edu.in" 
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-              <button type="submit" className="button" disabled={loading}>
-                {loading ? 'Logging in...' : 'Login'}
-              </button>
-            </form>
+            {status === 'loading' ? (
+              <p style={{ textAlign: 'center', color: '#94a3b8' }}>Loading secure session...</p>
+            ) : (
+              <>
+                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1.1rem' }}>
+                  Authorize with Ashoka SSO
+                </p>
+                <button onClick={() => signIn('google')} className="button">
+                  Sign in with Ashoka Google
+                </button>
+              </>
+            )}
           </div>
 
           {/* Character Posters Row */}
