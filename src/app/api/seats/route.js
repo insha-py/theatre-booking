@@ -40,7 +40,7 @@ export async function GET() {
     if (locksToRelease.length > 0) {
       await prisma.seat.updateMany({
         where: { id: { in: locksToRelease.map(s => s.id) } },
-        data: { status: 'AVAILABLE', lockedUntil: null, lockedBy: null }
+        data: { status: 'AVAILABLE', lockedUntil: null, userEmail: null }
       });
       // Re-fetch to return accurate data
       seats = await prisma.seat.findMany();

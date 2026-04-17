@@ -9,11 +9,11 @@ export async function POST(request) {
     const { seatIds } = await request.json();
     const session = await getServerSession(authOptions);
     
-    if (!session || !session.user || !session.user.id) {
+    if (!session || !session.user || !session.user.email) {
       return NextResponse.json({ error: 'Unauthorized. Please sign in with an Ashoka email.' }, { status: 401 });
     }
     
-    const userId = session.user.id;
+    const userEmail = session.user.email;
 
     if (!seatIds || !Array.isArray(seatIds) || seatIds.length === 0 || seatIds.length > 2) {
       return NextResponse.json({ error: 'You can only select up to 2 seats.' }, { status: 400 });
@@ -21,7 +21,7 @@ export async function POST(request) {
 
     // Checking max 2 seats limit logic across existing bookings
     const existingBookedCount = await prisma.seat.count({
-      where: { userId: userId, status: 'BOOKED' }
+      where: { userEmail: userEmail, status: 'BOOKED' }
     });
     
     if (existingBookedCount + seatIds.length > 2) {
@@ -33,7 +33,7 @@ export async function POST(request) {
     
     const now = new Date();
     const unavailable = requestedSeats.filter(
-      s => s.status === 'BOOKED' || (s.status === 'LOCKED' && s.lockedUntil && s.lockedUntil > now && s.lockedBy !== userId)
+      s => s.status === 'BOOKED' || (s.status === 'LOCKED' && s.lockedUntil && s.lockedUntil > now && s.userEmail !== userEmail)
     );
 
     if (unavailable.length > 0) {
@@ -43,21 +43,20 @@ export async function POST(request) {
     // Mark seats directly as BOOKED
     await prisma.seat.updateMany({
       where: { id: { in: seatIds } },
-      data: { status: 'BOOKED', lockedUntil: null, lockedBy: userId, userId }
+      data: { status: 'BOOKED', lockedUntil: null, userEmail }
     });
 
     // Create a confirmed booking immediately
     const booking = await prisma.booking.create({
       data: {
-        userId,
+        userEmail,
         seats: seatIds.join(','),
-        amount: 0, // No payment logic required
         status: 'CONFIRMED'
       }
     });
 
     // Generate QR Code containing booking ID and details
-    const qrText = `Booking ID: ${booking.id}\nSeats: ${booking.seats}\nUser: ${userId}`;
+    const qrText = `Booking ID: ${booking.id}\nSeats: ${booking.seats}\nEmail: ${userEmail}`;
     const qrCodeDataUrl = await QRCode.toDataURL(qrText);
 
     return NextResponse.json({ 

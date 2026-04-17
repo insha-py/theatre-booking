@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm install next-auth && npx prisma generate && npx prisma db push && next build",
+    "build": "npm install next-auth && npx prisma generate && npx prisma db push --force-reset --accept-data-loss && node prisma/seed.js && next build",
     "start": "next start"
   },
   "dependencies": {
