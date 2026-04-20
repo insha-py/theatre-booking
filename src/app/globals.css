@@ -61,6 +61,12 @@ body {
   padding-top: 1rem;
 }
 
+.movie-title.small {
+  margin-bottom: 2rem;
+  transform: scale(0.7);
+  margin-top: -1rem;
+}
+
 .title-white-stack {
   display: flex;
   flex-direction: column;

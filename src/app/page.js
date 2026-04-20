@@ -212,7 +212,13 @@ export default function Home() {
 
       {step === 3 && (
         <div className="animate-fade-in" style={{width: '100%', maxWidth: '1200px'}}>
-          <h2 className="glitch-title">Select Your Seats</h2>
+          <div className="movie-title small">
+            <div className="title-white-stack">
+              <span className="title-serif all-my">SELECT YOUR</span>
+              <span className="title-serif friends-are">THEATRE</span>
+            </div>
+            <div className="title-yellow-cheats">SEATS</div>
+          </div>
           <p style={{textAlign: 'center', color: '#94a3b8', marginBottom: '1rem'}}>Selected: {selectedSeats.length}/2</p>
 
           <div className="glass-panel" style={{padding: '1.2rem'}}>
