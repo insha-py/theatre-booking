@@ -159,13 +159,6 @@ export default function Home() {
       {step === 1 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '600px' }}>
           
-          {/* Poster Image */}
-          <img 
-            src="/poster.png" 
-            alt="All My Friends Are Cheaters" 
-            style={{ width: '100%', borderRadius: '12px', marginBottom: '1.5rem', boxShadow: '0 10px 40px rgba(0,0,0,0.5)', objectFit: 'cover' }} 
-          />
-
           {/* Main Title Outside the Box */}
           <div className="movie-title">
             <div className="title-white-stack">
@@ -181,11 +174,11 @@ export default function Home() {
               <p style={{ textAlign: 'center', color: '#94a3b8' }}>Loading secure session...</p>
             ) : (
               <>
-                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1.1rem' }}>
-                  Authorize with Ashoka SSO
+                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1.1rem', fontWeight: 'bold', letterSpacing: '1px' }}>
+                  SIGN UP
                 </p>
-                <button onClick={() => signIn('google')} className="button">
-                  Sign in with Ashoka Google
+                <button onClick={() => signIn('google')} className="button" style={{ fontWeight: 'bold' }}>
+                  SIGN UP
                 </button>
               </>
             )}
