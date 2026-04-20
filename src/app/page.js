@@ -265,22 +265,49 @@ export default function Home() {
 
 
       {step === 5 && (
-        <div className="glass-panel animate-fade-in" style={{width: '100%', maxWidth: '400px', textAlign: 'center'}}>
-          <h2 style={{marginBottom: '1.5rem', color: '#10b981'}}>Booking Confirmed!</h2>
-          <p style={{marginBottom: '2rem', color: '#94a3b8'}}>Present this QR code at the entrance.</p>
-          
-          <div style={{background: 'white', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '2rem'}}>
-            {bookingDetails?.qrCode && (
-              <img src={bookingDetails.qrCode} alt="Your Ticket QR" width={200} height={200} />
-            )}
+        <div className="animate-fade-in" style={{width: '100%', maxWidth: '500px', margin: '0 auto'}}>
+          <div className="glass-panel" style={{textAlign: 'center', padding: '2.5rem'}}>
+            <h2 className="title-yellow-cheats" style={{fontSize: '3rem', marginBottom: '1rem'}}>BOOKED!</h2>
+            
+            <div style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(239, 204, 70, 0.1)'}}>
+              <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '1px'}}>Booking Details</p>
+              
+              <div style={{marginBottom: '1rem'}}>
+                <p style={{fontSize: '0.9rem', color: '#94a3b8'}}>Email:</p>
+                <p style={{fontSize: '1rem', fontWeight: '600'}}>{bookingDetails?.userEmail}</p>
+              </div>
+
+              <div>
+                <p style={{fontSize: '0.9rem', color: '#94a3b8'}}>Seats:</p>
+                {bookingDetails?.seats && Array.isArray(bookingDetails.seats) ? (
+                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem'}}>
+                    {bookingDetails.seats.map((s, i) => (
+                      <div key={i} style={{background: 'rgba(239, 204, 70, 0.1)', border: '1px solid var(--primary)', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.9rem'}}>
+                        <span style={{fontWeight: 'bold'}}>{s.section}</span> • Row {s.row} • Seat {s.number}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>{bookingDetails?.seats}</p>
+                )}
+              </div>
+            </div>
+
+            <div style={{background: 'white', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '2rem', boxShadow: '0 0 30px rgba(0,0,0,0.5)'}}>
+              {bookingDetails?.qrCode && (
+                <img src={bookingDetails.qrCode} alt="Your Ticket QR" width={220} height={220} style={{display: 'block'}} />
+              )}
+            </div>
+            
+            <p style={{color: '#94a3b8', fontSize: '0.9rem', marginBottom: '2rem'}}>Present this QR code at the entrance.</p>
+            
+            <button 
+              className="button" 
+              onClick={() => { setStep(3); setSelectedSeats([]); setBookingDetails(null); }}
+            >
+              Book More Seats
+            </button>
           </div>
-          
-          <button 
-            className="button" 
-            onClick={() => { setStep(3); setSelectedSeats([]); setBookingDetails(null); }}
-          >
-            Book More
-          </button>
         </div>
       )}
 

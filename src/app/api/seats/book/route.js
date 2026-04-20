@@ -55,14 +55,21 @@ export async function POST(request) {
       }
     });
 
+    // Fetch full seat details to return to the frontend
+    const bookedSeats = await prisma.seat.findMany({
+      where: { id: { in: seatIds } },
+      select: { section: true, row: true, number: true }
+    });
+
     // Generate QR Code containing booking ID and details
-    const qrText = `Booking ID: ${booking.id}\nSeats: ${booking.seats}\nEmail: ${userEmail}`;
+    const qrText = `Booking ID: ${booking.id}\nSeats: ${bookedSeats.map(s => `${s.section} R${s.row} S${s.number}`).join(', ')}\nEmail: ${userEmail}`;
     const qrCodeDataUrl = await QRCode.toDataURL(qrText);
 
     return NextResponse.json({ 
       message: 'Booking confirmed', 
       bookingId: booking.id,
-      seats: booking.seats,
+      seats: bookedSeats,
+      userEmail,
       qrCode: qrCodeDataUrl 
     });
   } catch (error) {
