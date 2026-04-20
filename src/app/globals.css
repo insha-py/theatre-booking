@@ -99,98 +99,93 @@ body {
   width: 100%;
 }
 
-/* Seat map grid */
+/* ── Seat map ────────────────────────────────────── */
+:root {
+  --seat-w: clamp(11px, 1.35vw, 17px);
+  --seat-h: clamp(13px, 1.6vw,  20px);
+  --bench-gap: 1px;
+  --row-gap:   5px;
+  --panel-gap: clamp(20px, 3vw, 50px);
+}
+
 .theatre-wrapper {
   width: 100%;
   overflow-x: auto;
+  overflow-y: visible;
   padding-bottom: 1rem;
-  scrollbar-width: thin; /* For Firefox */
-  margin: 0 -2rem; /* Pull out of the glass panel padding */
-  padding: 0 2rem; /* Add padding back to keep elements away from true edge */
+  scrollbar-width: thin;
 }
 
-.theatre-wrapper::-webkit-scrollbar {
-  height: 6px;
-}
-
+.theatre-wrapper::-webkit-scrollbar { height: 5px; }
 .theatre-wrapper::-webkit-scrollbar-thumb {
   background: var(--primary);
   border-radius: 4px;
 }
 
+/* Outer shell that constrains everything */
 .theatre-layout {
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: 0;
-  margin: 3rem auto;
-  perspective: 1000px;
-  min-width: max-content;
+  margin: 1.5rem auto 2rem;
+  min-width: min-content;
+  padding: 0 8px 20px;
 }
 
 .section {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--row-gap);
   align-items: center;
 }
 
-.row {
-  display: flex;
-  gap: 0.5rem;
-}
+.row     { display: flex; gap: 0.4rem; }
+.bench-row { gap: var(--bench-gap); }
 
-.bench-row {
-  gap: 1px; /* Very small gap to show individual seats but keep bench look */
-}
-
+/* ── Individual seat ──────────────────────────── */
 .seat {
-  width: 24px;
-  height: 28px;
+  width:  var(--seat-w);
+  height: var(--seat-h);
   background-color: var(--seat-available);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   position: relative;
   border-radius: 2px;
+  flex-shrink: 0;
 }
 
-/* Bench look: First and Last seat of a bench-row get more rounded corners */
-.bench-row .seat:first-child {
-  border-radius: 8px 2px 2px 8px;
-}
+/* Bench end-caps */
+.bench-row .seat:first-child { border-radius: 6px 1px 1px 6px; }
+.bench-row .seat:last-child  { border-radius: 1px 6px 6px 1px; }
 
-.bench-row .seat:last-child {
-  border-radius: 2px 8px 8px 2px;
-}
-
-/* Add an armrest look using box-shadow */
+/* Subtle seat divider line */
 .seat::after {
   content: '';
   position: absolute;
-  top: 4px;
-  left: 2px;
-  right: 2px;
-  bottom: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  inset: 3px 2px;
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 2px;
   pointer-events: none;
 }
 
 .seat:hover:not(.booked):not(.locked) {
-  transform: scale(1.15);
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  transform: scale(1.18);
+  z-index: 2;
+  box-shadow: 0 0 8px rgba(255,255,255,0.25);
 }
 
 .seat.selected {
   background-color: var(--seat-selected);
-  transform: scale(1.1);
-  box-shadow: 0 0 15px var(--seat-selected);
+  transform: scale(1.12);
+  z-index: 2;
+  box-shadow: 0 0 12px var(--seat-selected);
 }
 
 .seat.booked {
   background-color: var(--seat-booked);
   cursor: not-allowed;
-  opacity: 0.4;
+  opacity: 0.45;
 }
 
 .seat.locked {
@@ -198,124 +193,148 @@ body {
   cursor: not-allowed;
 }
 
-/* Section Transformations for Curving */
+/* ── Section transforms (curve toward stage) ──── */
+/*   Left swings clockwise around its right edge   */
 .section-left {
-  transform: rotate(12deg) translateY(20px);
-  transform-origin: bottom right;
+  transform: rotate(18deg);
+  transform-origin: right center;
+  margin-right: calc(var(--panel-gap) * 0.3);
 }
 
+/*   Right swings counter-clockwise around its left edge */
 .section-right {
-  transform: rotate(-12deg) translateY(20px);
-  transform-origin: bottom left;
+  transform: rotate(-18deg);
+  transform-origin: left center;
+  margin-left: calc(var(--panel-gap) * 0.3);
 }
 
-.section-middle {
-  transform: translateY(-5px);
-}
+.section-middle { /* sits flat, slightly closer to stage */ }
 
-/* Gap and Exit Gates */
+/* ── Gap dividers with exit gates ───────────────── */
 .gap-divider {
-  width: 60px;
+  width: var(--panel-gap);
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
   position: relative;
 }
 
 .exit-gate {
-  width: 40px;
-  height: 12px;
-  background: #065f46; /* Emergency green */
+  width:  clamp(24px, 3.5vw, 40px);
+  height: clamp(8px,  1.2vw, 14px);
+  background: #065f46;
   color: #10b981;
-  font-size: 8px;
-  font-weight: bold;
+  font-size: clamp(5px, 0.6vw, 8px);
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 2px;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 8px rgba(16,185,129,0.35);
   letter-spacing: 1px;
   border-top: 2px solid #10b981;
+  position: relative;
 }
 
 .exit-gate::before {
   content: '';
   position: absolute;
-  bottom: -5px;
+  bottom: calc(-1 * clamp(4px, 0.8vw, 10px));
   width: 2px;
-  height: 15px;
-  background: rgba(16, 185, 129, 0.2);
+  height: clamp(6px, 1vw, 14px);
+  background: rgba(16,185,129,0.25);
 }
 
+/* ── Stage ───────────────────────────────────────── */
 .screen {
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.5) 0%, transparent 100%);
-  height: 60px;
-  width: 80%;
-  margin: 0 auto 3rem;
+  background: linear-gradient(180deg, rgba(59,130,246,0.5) 0%, transparent 100%);
+  height: clamp(36px, 5vw, 60px);
+  width: 75%;
+  margin: 0 auto 2rem;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   text-align: center;
   position: relative;
-  box-shadow: 0 -20px 50px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 -16px 40px rgba(59,130,246,0.2);
 }
 
 .screen::before {
   content: 'STAGE';
   position: absolute;
-  bottom: 10px;
+  bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
   font-weight: 600;
+  font-size: clamp(9px, 1.1vw, 13px);
   letter-spacing: 4px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255,255,255,0.5);
 }
 
-/* Animations */
+/* ── Animations ──────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
 
-.animate-fade-in {
-  animation: fadeIn 0.4s ease forwards;
-}
-
-/* Legend */
+/* ── Legend ──────────────────────────────────────── */
 .legend {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
+  gap: 0.4rem;
+  font-size: 0.8rem;
   color: #94a3b8;
 }
 
 .legend-box {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .seat {
-    width: 18px;
-    height: 18px;
+/* ── Responsive breakpoints ──────────────────────── */
+@media (max-width: 900px) {
+  :root {
+    --seat-w: clamp(9px, 1.8vw, 14px);
+    --seat-h: clamp(11px, 2.1vw, 17px);
+    --panel-gap: clamp(14px, 2.5vw, 28px);
   }
-  .theatre-layout {
-    gap: 1rem;
+  .container { padding: 1rem; }
+  .glass-panel { padding: 1.2rem; }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --seat-w: clamp(7px, 2.2vw, 11px);
+    --seat-h: clamp(9px,  2.6vw, 14px);
+    --panel-gap: 12px;
+    --row-gap: 3px;
   }
-  .theatre-wrapper {
-    margin: 0 -1.5rem; 
-    padding: 0 1.5rem;
+  .glass-panel { padding: 1rem 0.6rem; }
+  .section-left  { transform: rotate(14deg); }
+  .section-right { transform: rotate(-14deg); }
+  .screen { margin-bottom: 1.2rem; }
+}
+
+@media (max-width: 400px) {
+  :root {
+    --seat-w: 7px;
+    --seat-h: 9px;
+    --panel-gap: 8px;
+    --row-gap: 3px;
+    --bench-gap: 1px;
   }
-  .glass-panel {
-    padding: 1.5rem;
-  }
+  .section-left  { transform: rotate(12deg); }
+  .section-right { transform: rotate(-12deg); }
 }

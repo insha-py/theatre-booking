@@ -214,11 +214,11 @@ export default function Home() {
       )}
 
       {step === 3 && (
-        <div className="animate-fade-in" style={{width: '100%', maxWidth: '1000px'}}>
+        <div className="animate-fade-in" style={{width: '100%', maxWidth: '1200px'}}>
           <h2 className="glitch-title">Select Your Seats</h2>
-          <p style={{textAlign: 'center', color: '#94a3b8', marginBottom: '2rem'}}>Selected: {selectedSeats.length}/2</p>
+          <p style={{textAlign: 'center', color: '#94a3b8', marginBottom: '1rem'}}>Selected: {selectedSeats.length}/2</p>
 
-          <div className="glass-panel">
+          <div className="glass-panel" style={{padding: '1.2rem'}}>
             <div className="screen"></div>
             
             {seats.length > 0 ? (
@@ -246,7 +246,7 @@ export default function Home() {
               <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-booked)'}}></div> Booked</div>
             </div>
 
-            <div style={{marginTop: '3rem', display: 'flex', justifyContent: 'center'}}>
+            <div style={{marginTop: '1.5rem', display: 'flex', justifyContent: 'center'}}>
               <button 
                 className="button" 
                 style={{maxWidth: '300px'}} 
