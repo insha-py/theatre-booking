@@ -196,7 +196,7 @@ body {
 /* ── Section transforms (curve toward stage) ──── */
 /*   Left swings clockwise around its right edge   */
 .section-left {
-  transform: rotate(24deg) translateY(-30px) translateX(20px);
+  transform: rotate(26deg) translateY(-70px) translateX(30px);
   transform-origin: right center;
   margin-right: calc(var(--panel-gap) * 0.4);
   z-index: 5;
@@ -204,7 +204,7 @@ body {
 
 /*   Right swings counter-clockwise around its left edge */
 .section-right {
-  transform: rotate(-24deg) translateY(-30px) translateX(-20px);
+  transform: rotate(-26deg) translateY(-70px) translateX(-30px);
   transform-origin: left center;
   margin-left: calc(var(--panel-gap) * 0.4);
   z-index: 5;
