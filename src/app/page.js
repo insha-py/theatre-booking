@@ -174,10 +174,10 @@ export default function Home() {
               <p style={{ textAlign: 'center', color: '#94a3b8' }}>Loading secure session...</p>
             ) : (
               <>
-                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1.1rem', fontWeight: 'bold', letterSpacing: '1px' }}>
-                  SIGN UP
+                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1rem', fontWeight: 'bold', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  USE ASHOKA EMAIL
                 </p>
-                <button onClick={() => signIn('google')} className="button" style={{ fontWeight: 'bold' }}>
+                <button onClick={() => signIn('google')} className="button">
                   SIGN UP
                 </button>
               </>

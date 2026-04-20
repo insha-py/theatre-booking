@@ -3,14 +3,14 @@
 :root {
   --background: #020617; /* Very dark blue */
   --foreground: #fdf2f8; /* Soft pink-white */
-  --primary: #d946ef; /* Bright magenta/pink */
-  --primary-hover: #c026d3;
+  --primary: #efcc46; /* Cinema Yellow */
+  --primary-hover: #d4b43c;
   --seat-available: #1e3a8a; /* Deep neon blue */
   --seat-locked: #eab308;
   --seat-booked: #be123c; /* Dark cinema red */
-  --seat-selected: #f472b6; /* Hot pink */
+  --seat-selected: #f472b6; /* Hot pink (keeps it distinct from primary buttons) */
   --card-bg: rgba(15, 23, 42, 0.85); /* Darker blue panel */
-  --border: rgba(217, 70, 239, 0.2); /* Pinkish border */
+  --border: rgba(239, 204, 70, 0.2); /* Translucent yellow border */
 }
 
 * {
@@ -120,15 +120,17 @@ body {
 
 .button {
   background-color: var(--primary);
-  color: white;
+  color: #020617; /* Dark text on yellow for high contrast */
   border: none;
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.2s ease;
   width: 100%;
+  text-transform: uppercase;
 }
 
 .button:hover:not(:disabled) {
