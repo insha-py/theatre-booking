@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@400;700&family=Londrina+Solid:wght@400;900&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   --background: #020617; /* Very dark blue */
@@ -38,7 +38,7 @@ body {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(217, 70, 239, 0.05);
 }
 
-.glitch-title {
+.glitch-title { /* Keeping for potential use elsewhere */
   font-family: 'Anton', sans-serif;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -46,9 +46,70 @@ body {
   margin-bottom: 1.5rem;
   color: #fff;
   text-shadow: 
-    3px 0px rgba(59, 130, 246, 0.8), /* Blue channel */
-    -3px 0px rgba(220, 38, 38, 0.8),  /* Red channel */
-    0px 2px rgba(16, 185, 129, 0.4);  /* Green hint */
+    3px 0px rgba(59, 130, 246, 0.8),
+    -3px 0px rgba(220, 38, 38, 0.8),
+    0px 2px rgba(16, 185, 129, 0.4);
+}
+
+/* ── Custom Movie Title ─────────────────────────── */
+.movie-title {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding-top: 1rem;
+}
+
+.title-white-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: min-content;
+  z-index: 10;
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-80%); /* Offset slightly left to center the whole group */
+}
+
+.title-serif {
+  font-family: 'Cinzel', serif;
+  color: #fff;
+  line-height: 0.9;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+
+.title-serif.all-my {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 400;
+  margin-left: auto; /* Push Row 1 to the right relative to Row 2 */
+}
+
+.title-serif.friends-are {
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  font-weight: 700;
+}
+
+.title-yellow-cheats {
+  font-family: 'Londrina Solid', cursive;
+  color: #efcc46; /* Matching the image yellow */
+  font-size: clamp(5rem, 15vw, 10rem);
+  line-height: 0.8;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  z-index: 5;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+  /* Give it that irregular hand-drawn tilt */
+  transform: rotate(-1deg) skew(-2deg);
+}
+
+@media (max-width: 600px) {
+  .title-white-stack {
+    top: -10px;
+    transform: translateX(-70%);
+  }
 }
 
 .button {

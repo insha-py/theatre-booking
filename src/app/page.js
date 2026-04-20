@@ -167,9 +167,13 @@ export default function Home() {
           />
 
           {/* Main Title Outside the Box */}
-          <h2 className="glitch-title" style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>
-            ALL MY FRIENDS ARE CHEATERS
-          </h2>
+          <div className="movie-title">
+            <div className="title-white-stack">
+              <span className="title-serif all-my">ALL MY</span>
+              <span className="title-serif friends-are">FRIENDS ARE</span>
+            </div>
+            <div className="title-yellow-cheats">CHEATS</div>
+          </div>
 
           {/* Login Box */}
           <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', zIndex: 10 }}>
