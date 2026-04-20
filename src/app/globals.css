@@ -423,9 +423,10 @@ body {
   .glass-panel { padding: 1rem 0.6rem; }
   .screen { margin-bottom: 2rem; }
   .theatre-layout {
-    padding: 0 120px 60px; /* Explicit side padding to ensure 3D panels don't clip */
+    justify-content: flex-start; /* Ensure scroll starts at the far left edge */
+    padding: 0 40px 60px; /* Reduced side padding (relying on flex-start now) */
     transform: rotateX(15deg);
-    min-width: 650px; /* Force minimum width to ensure horizontal scroll catches edges */
+    min-width: min-content; /* Allow it to set its own scrollable width */
   }
   .theatre-floor {
     overflow: visible;
