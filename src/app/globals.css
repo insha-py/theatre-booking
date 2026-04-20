@@ -181,13 +181,10 @@ body {
   width: 100%;
   overflow-x: auto;
   overflow-y: visible;
-  padding: 3rem 1rem 5rem;
+  padding: 2rem 0 4rem;
   scrollbar-width: thin;
   position: relative;
-  /* Spotlight floor rays emanating from the stage */
-  background: 
-    radial-gradient(circle at 50% 0%, rgba(59,130,246,0.15) 0%, transparent 70%),
-    conic-gradient(from 150deg at 50% 0%, transparent 0deg, rgba(59,130,246,0.05) 10deg, transparent 20deg, rgba(59,130,246,0.05) 30deg, transparent 40deg);
+  background: transparent;
 }
 
 .theatre-wrapper::-webkit-scrollbar { height: 5px; }
@@ -342,7 +339,7 @@ body {
   box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
   text-transform: uppercase;
   position: relative;
-  bottom: -40px;
+  bottom: -60px; /* Pushed further down */
   animation: pulse-exit 2.5s infinite;
   white-space: nowrap;
 }
@@ -424,16 +421,18 @@ body {
     --row-gap: 3px;
   }
   .glass-panel { padding: 1rem 0.6rem; }
-  .screen { margin-bottom: 1.5rem; }
+  .screen { margin-bottom: 2rem; }
   .theatre-layout {
-    padding: 0 100px 40px; /* More sides padding to handle 3D tilt without clipping */
-    transform: rotateX(15deg); /* Flatter tilt on smaller screens */
+    padding: 0 120px 60px; /* Explicit side padding to ensure 3D panels don't clip */
+    transform: rotateX(15deg);
+    min-width: 650px; /* Force minimum width to ensure horizontal scroll catches edges */
   }
   .theatre-floor {
     overflow: visible;
   }
-  .section-left { transform: rotateY(15deg) rotateZ(8deg); }
-  .section-right { transform: rotateY(-15deg) rotateZ(-8deg); }
+  /* Simplified transforms for mobile reached edges */
+  .section-left { transform: rotateY(15deg) rotateZ(5deg); }
+  .section-right { transform: rotateY(-15deg) rotateZ(-5deg); }
 }
 
 @media (max-width: 400px) {
