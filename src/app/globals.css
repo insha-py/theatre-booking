@@ -320,16 +320,14 @@ body {
 /* ── Aisles & Floor Gates ─────────────────────────── */
 .aisle {
   width: var(--panel-gap);
-  height: 250px;
+  flex-shrink: 0;
   margin-top: auto;
   position: relative;
-  background: linear-gradient(to top, rgba(239, 204, 70, 0.03) 0%, transparent 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
   padding-bottom: 5px;
-  transform-style: preserve-3d;
 }
 
 .exit-gate {
@@ -426,6 +424,16 @@ body {
     --row-gap: 3px;
   }
   .glass-panel { padding: 1rem 0.6rem; }
+  .screen { margin-bottom: 1.5rem; }
+  .theatre-layout {
+    padding: 0 100px 40px; /* More sides padding to handle 3D tilt without clipping */
+    transform: rotateX(15deg); /* Flatter tilt on smaller screens */
+  }
+  .theatre-floor {
+    overflow: visible;
+  }
+  .section-left { transform: rotateY(15deg) rotateZ(8deg); }
+  .section-right { transform: rotateY(-15deg) rotateZ(-8deg); }
 }
 
 @media (max-width: 400px) {
