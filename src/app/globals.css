@@ -181,8 +181,13 @@ body {
   width: 100%;
   overflow-x: auto;
   overflow-y: visible;
-  padding-bottom: 1rem;
+  padding: 3rem 1rem 5rem;
   scrollbar-width: thin;
+  position: relative;
+  /* Spotlight floor rays emanating from the stage */
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(59,130,246,0.15) 0%, transparent 70%),
+    conic-gradient(from 150deg at 50% 0%, transparent 0deg, rgba(59,130,246,0.05) 10deg, transparent 20deg, rgba(59,130,246,0.05) 30deg, transparent 40deg);
 }
 
 .theatre-wrapper::-webkit-scrollbar { height: 5px; }
@@ -191,15 +196,26 @@ body {
   border-radius: 4px;
 }
 
+/* New: Floor perspective wrapper */
+.theatre-floor {
+  perspective: 1200px;
+  perspective-origin: top;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 /* Outer shell that constrains everything */
 .theatre-layout {
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: 0;
-  margin: 1.5rem auto 2rem;
+  margin: 0 auto;
   min-width: min-content;
-  padding: 0 8px 20px;
+  padding: 0 40px 40px;
+  transform: rotateX(22deg); /* Creates the floor depth feel */
+  transform-style: preserve-3d;
 }
 
 .section {
@@ -209,7 +225,11 @@ body {
   align-items: center;
 }
 
-.row     { display: flex; gap: 0.4rem; }
+.row { 
+  display: flex; 
+  gap: 0.4rem; 
+  align-items: center;
+}
 .bench-row { gap: var(--bench-gap); }
 
 /* ── Individual seat ──────────────────────────── */
@@ -218,22 +238,26 @@ body {
   height: var(--seat-h);
   background-color: var(--seat-available);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  border-radius: 2px;
+  border-radius: 4px;
   flex-shrink: 0;
+  /* Seat cushion depth */
+  box-shadow: 
+    inset 0 -3px 0 rgba(0,0,0,0.3),
+    0 2px 4px rgba(0,0,0,0.5);
 }
 
 /* Bench end-caps */
-.bench-row .seat:first-child { border-radius: 6px 1px 1px 6px; }
-.bench-row .seat:last-child  { border-radius: 1px 6px 6px 1px; }
+.bench-row .seat:first-child { border-radius: 8px 3px 3px 8px; }
+.bench-row .seat:last-child  { border-radius: 3px 8px 8px 3px; }
 
-/* Subtle seat divider line */
+/* Subtle seat divider line (integrated depth) */
 .seat::after {
   content: '';
   position: absolute;
-  inset: 3px 2px;
-  border: 1px solid rgba(255,255,255,0.06);
+  inset: 2px;
+  border: 1px solid rgba(255,255,255,0.04);
   border-radius: 2px;
   pointer-events: none;
 }
@@ -262,89 +286,94 @@ body {
   cursor: not-allowed;
 }
 
-/* ── Section transforms (curve toward stage) ──── */
-/*   Left swings clockwise around its right edge   */
+/* ── Row Labels ──────────────────────────────────── */
+.row-label {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: bold;
+  pointer-events: none;
+  min-width: 15px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.row-label.lead { margin-right: 8px; }
+.row-label.end { margin-left: 8px; }
+
+/* ── Section transforms (refined 3D arc) ──────────── */
 .section-left {
-  transform: rotate(26deg) translateY(-70px) translateX(30px);
-  transform-origin: right center;
-  margin-right: calc(var(--panel-gap) * 0.4);
-  z-index: 5;
+  transform: rotateY(25deg) rotateZ(12deg) translateY(-2px);
+  transform-origin: right bottom;
+  margin-right: -10px;
 }
 
-/*   Right swings counter-clockwise around its left edge */
 .section-right {
-  transform: rotate(-26deg) translateY(-70px) translateX(-30px);
-  transform-origin: left center;
-  margin-left: calc(var(--panel-gap) * 0.4);
-  z-index: 5;
+  transform: rotateY(-25deg) rotateZ(-12deg) translateY(-2px);
+  transform-origin: left bottom;
+  margin-left: -10px;
 }
 
-.section-middle { 
-  transform: translateY(0);
+.section-middle {
   z-index: 10;
 }
 
-/* ── Gap dividers with exit gates ───────────────── */
-.gap-divider {
+/* ── Aisles & Floor Gates ─────────────────────────── */
+.aisle {
   width: var(--panel-gap);
-  flex-shrink: 0;
+  height: 250px;
+  margin-top: auto;
+  position: relative;
+  background: linear-gradient(to top, rgba(239, 204, 70, 0.03) 0%, transparent 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  padding-bottom: 8px;
-  position: relative;
+  padding-bottom: 5px;
+  transform-style: preserve-3d;
 }
 
 .exit-gate {
-  width:  clamp(24px, 3.5vw, 40px);
-  height: clamp(8px,  1.2vw, 14px);
-  background: #065f46;
-  color: #10b981;
-  font-size: clamp(5px, 0.6vw, 8px);
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 2px;
-  box-shadow: 0 0 8px rgba(16,185,129,0.35);
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1.5px solid #22c55e;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.6rem;
+  font-weight: 800;
   letter-spacing: 1px;
-  border-top: 2px solid #10b981;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+  text-transform: uppercase;
   position: relative;
-}
-
-.exit-gate::before {
-  content: '';
-  position: absolute;
-  bottom: calc(-1 * clamp(4px, 0.8vw, 10px));
-  width: 2px;
-  height: clamp(6px, 1vw, 14px);
-  background: rgba(16,185,129,0.25);
+  bottom: -40px;
+  animation: pulse-exit 2.5s infinite;
+  white-space: nowrap;
 }
 
 /* ── Stage ───────────────────────────────────────── */
 .screen {
-  background: linear-gradient(180deg, rgba(59,130,246,0.5) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(59,130,246,0.6) 0%, transparent 100%);
   height: clamp(36px, 5vw, 60px);
-  width: 45%; /* Narrower stage - slightly larger than middle panel */
+  width: 45%; 
   min-width: 300px;
-  margin: 0 auto 3.5rem;
+  margin: 0 auto 4.5rem; /* Increased mobile-friendly spacing */
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   text-align: center;
   position: relative;
-  box-shadow: 0 -16px 40px rgba(59,130,246,0.2);
+  box-shadow: 0 -20px 45px rgba(59,130,246,0.25);
+  z-index: 20;
 }
 
 .screen::before {
   content: 'STAGE';
   position: absolute;
-  bottom: 8px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  font-weight: 600;
-  font-size: clamp(9px, 1.1vw, 13px);
-  letter-spacing: 4px;
-  color: rgba(255,255,255,0.5);
+  transform: translate(-50%, -50%);
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  letter-spacing: 5px;
+  color: rgba(255,255,255,0.8);
+  white-space: nowrap;
 }
 
 /* ── Animations ──────────────────────────────────── */
@@ -397,9 +426,6 @@ body {
     --row-gap: 3px;
   }
   .glass-panel { padding: 1rem 0.6rem; }
-  .section-left  { transform: rotate(14deg); }
-  .section-right { transform: rotate(-14deg); }
-  .screen { margin-bottom: 1.2rem; }
 }
 
 @media (max-width: 400px) {
@@ -410,6 +436,4 @@ body {
     --row-gap: 3px;
     --bench-gap: 1px;
   }
-  .section-left  { transform: rotate(12deg); }
-  .section-right { transform: rotate(-12deg); }
 }

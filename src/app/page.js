@@ -92,6 +92,7 @@ export default function Home() {
       <div className="section section-left">
         {rows.map((row, i) => (
           <div key={`left-r${i}`} className="row bench-row">
+            <span className="row-label lead">{String.fromCharCode(65 + i)}</span>
             {row.map(s => (
               <div 
                 key={s.id} 
@@ -116,6 +117,7 @@ export default function Home() {
       <div className="section section-middle">
         {rows.map((row, i) => (
           <div key={`mid-r${i}`} className="row bench-row">
+            <span className="row-label">{String.fromCharCode(65 + i)}</span>
             {row.map(s => (
               <div 
                 key={s.id} 
@@ -124,6 +126,7 @@ export default function Home() {
                 title={`Middle Row ${s.row} Seat ${s.number}`}
               ></div>
             ))}
+            <span className="row-label">{String.fromCharCode(65 + i)}</span>
           </div>
         ))}
       </div>
@@ -148,6 +151,7 @@ export default function Home() {
                 title={`Right Row ${s.row} Seat ${s.number}`}
               ></div>
             ))}
+            <span className="row-label end">{String.fromCharCode(65 + i)}</span>
           </div>
         ))}
       </div>
@@ -226,16 +230,18 @@ export default function Home() {
             
             {seats.length > 0 ? (
               <div className="theatre-wrapper">
-                <div className="theatre-layout">
-                  {renderLeft()}
-                  <div className="gap-divider">
-                    <div className="exit-gate" title="Exit">EXIT</div>
+                <div className="theatre-floor">
+                  <div className="theatre-layout">
+                    {renderLeft()}
+                    <div className="aisle">
+                      <div className="exit-gate" title="Exit">EXIT</div>
+                    </div>
+                    {renderMiddle()}
+                    <div className="aisle">
+                      <div className="exit-gate" title="Exit">EXIT</div>
+                    </div>
+                    {renderRight()}
                   </div>
-                  {renderMiddle()}
-                  <div className="gap-divider">
-                    <div className="exit-gate" title="Exit">EXIT</div>
-                  </div>
-                  {renderRight()}
                 </div>
               </div>
             ) : (
