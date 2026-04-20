@@ -196,19 +196,24 @@ body {
 /* ── Section transforms (curve toward stage) ──── */
 /*   Left swings clockwise around its right edge   */
 .section-left {
-  transform: rotate(18deg);
+  transform: rotate(24deg) translateY(-30px) translateX(20px);
   transform-origin: right center;
-  margin-right: calc(var(--panel-gap) * 0.3);
+  margin-right: calc(var(--panel-gap) * 0.4);
+  z-index: 5;
 }
 
 /*   Right swings counter-clockwise around its left edge */
 .section-right {
-  transform: rotate(-18deg);
+  transform: rotate(-24deg) translateY(-30px) translateX(-20px);
   transform-origin: left center;
-  margin-left: calc(var(--panel-gap) * 0.3);
+  margin-left: calc(var(--panel-gap) * 0.4);
+  z-index: 5;
 }
 
-.section-middle { /* sits flat, slightly closer to stage */ }
+.section-middle { 
+  transform: translateY(0);
+  z-index: 10;
+}
 
 /* ── Gap dividers with exit gates ───────────────── */
 .gap-divider {
@@ -252,8 +257,9 @@ body {
 .screen {
   background: linear-gradient(180deg, rgba(59,130,246,0.5) 0%, transparent 100%);
   height: clamp(36px, 5vw, 60px);
-  width: 75%;
-  margin: 0 auto 2rem;
+  width: 45%; /* Narrower stage - slightly larger than middle panel */
+  min-width: 300px;
+  margin: 0 auto 3.5rem;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   text-align: center;
   position: relative;

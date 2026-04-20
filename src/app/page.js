@@ -242,7 +242,6 @@ export default function Home() {
             <div className="legend">
               <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-available)'}}></div> Available</div>
               <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-selected)'}}></div> Selected</div>
-              <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-locked)'}}></div> In Cart (Locked)</div>
               <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-booked)'}}></div> Booked</div>
             </div>
 
