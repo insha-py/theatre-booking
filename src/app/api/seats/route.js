@@ -1,30 +1,42 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const reset = searchParams.get('reset') === 'true';
+
+    if (reset) {
+      console.log('Resetting seats...');
+      await prisma.seat.deleteMany();
+    }
+
     let seats = await prisma.seat.findMany();
 
     // If it's empty, let's initialize the seats!
     if (seats.length === 0) {
-      console.log('Initializing seeds...');
+      console.log('Initializing seeds with new layout...');
       const initSeats = [];
-      
-      // LEFT section: 4x10 = 40
-      for (let r = 1; r <= 4; r++) {
-        for (let n = 1; n <= 10; n++) {
+
+      // LEFT section: 3 rows x 7 seats = 21
+      for (let r = 1; r <= 3; r++) {
+        for (let n = 1; n <= 7; n++) {
           initSeats.push({ section: 'LEFT', row: r, number: n });
         }
       }
-      // MIDDLE section: 6x15 = 90
-      for (let r = 1; r <= 6; r++) {
-        for (let n = 1; n <= 15; n++) {
+
+      // MIDDLE section: 5 rows
+      // Rows 1-2: 21 seats each, Rows 3-5: 28 seats each
+      for (let r = 1; r <= 5; r++) {
+        const capacity = r <= 2 ? 21 : 28;
+        for (let n = 1; n <= capacity; n++) {
           initSeats.push({ section: 'MIDDLE', row: r, number: n });
         }
       }
-      // RIGHT section: 4x10 = 40
-      for (let r = 1; r <= 4; r++) {
-        for (let n = 1; n <= 10; n++) {
+
+      // RIGHT section: 3 rows x 7 seats = 21
+      for (let r = 1; r <= 3; r++) {
+        for (let n = 1; n <= 7; n++) {
           initSeats.push({ section: 'RIGHT', row: r, number: n });
         }
       }
@@ -36,13 +48,12 @@ export async function GET() {
     // Now let's release any locks that expired (older than 9 minutes)
     const now = new Date();
     const locksToRelease = seats.filter(s => s.status === 'LOCKED' && s.lockedUntil && s.lockedUntil < now);
-    
+
     if (locksToRelease.length > 0) {
       await prisma.seat.updateMany({
         where: { id: { in: locksToRelease.map(s => s.id) } },
         data: { status: 'AVAILABLE', lockedUntil: null, userEmail: null }
       });
-      // Re-fetch to return accurate data
       seats = await prisma.seat.findMany();
     }
 

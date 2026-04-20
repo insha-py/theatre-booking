@@ -84,14 +84,14 @@ export default function Home() {
   // Rendering Sections
   const renderLeft = () => {
     const leftSeats = seats.filter(s => s.section === 'LEFT');
-    let rows = [];
-    for(let r=1; r<=4; r++) {
+    const rows = [];
+    for(let r=1; r<=3; r++) {
       rows.push(leftSeats.filter(s => s.row === r).sort((a,b) => a.number - b.number));
     }
     return (
-      <div className="section">
+      <div className="section section-left">
         {rows.map((row, i) => (
-          <div key={`left-r${i}`} className="row">
+          <div key={`left-r${i}`} className="row bench-row">
             {row.map(s => (
               <div 
                 key={s.id} 
@@ -108,14 +108,14 @@ export default function Home() {
 
   const renderMiddle = () => {
     const middleSeats = seats.filter(s => s.section === 'MIDDLE');
-    let rows = [];
-    for(let r=1; r<=6; r++) {
+    const rows = [];
+    for(let r=1; r<=5; r++) {
       rows.push(middleSeats.filter(s => s.row === r).sort((a,b) => a.number - b.number));
     }
     return (
-      <div className="section">
+      <div className="section section-middle">
         {rows.map((row, i) => (
-          <div key={`mid-r${i}`} className="row">
+          <div key={`mid-r${i}`} className="row bench-row">
             {row.map(s => (
               <div 
                 key={s.id} 
@@ -132,14 +132,14 @@ export default function Home() {
 
   const renderRight = () => {
     const rightSeats = seats.filter(s => s.section === 'RIGHT');
-    let rows = [];
-    for(let r=1; r<=4; r++) {
+    const rows = [];
+    for(let r=1; r<=3; r++) {
       rows.push(rightSeats.filter(s => s.row === r).sort((a,b) => a.number - b.number));
     }
     return (
-      <div className="section">
+      <div className="section section-right">
         {rows.map((row, i) => (
-          <div key={`right-r${i}`} className="row">
+          <div key={`right-r${i}`} className="row bench-row">
             {row.map(s => (
               <div 
                 key={s.id} 
@@ -225,7 +225,13 @@ export default function Home() {
               <div className="theatre-wrapper">
                 <div className="theatre-layout">
                   {renderLeft()}
+                  <div className="gap-divider">
+                    <div className="exit-gate" title="Exit">EXIT</div>
+                  </div>
                   {renderMiddle()}
+                  <div className="gap-divider">
+                    <div className="exit-gate" title="Exit">EXIT</div>
+                  </div>
                   {renderRight()}
                 </div>
               </div>

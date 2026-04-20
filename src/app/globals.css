@@ -121,7 +121,8 @@ body {
 .theatre-layout {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  align-items: flex-end;
+  gap: 0;
   margin: 3rem auto;
   perspective: 1000px;
   min-width: max-content;
@@ -130,7 +131,7 @@ body {
 .section {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 6px;
   align-items: center;
 }
 
@@ -139,26 +140,40 @@ body {
   gap: 0.5rem;
 }
 
+.bench-row {
+  gap: 1px; /* Very small gap to show individual seats but keep bench look */
+}
+
 .seat {
   width: 24px;
-  height: 24px;
-  border-radius: 6px 6px 4px 4px;
+  height: 28px;
   background-color: var(--seat-available);
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  border-radius: 2px;
+}
+
+/* Bench look: First and Last seat of a bench-row get more rounded corners */
+.bench-row .seat:first-child {
+  border-radius: 8px 2px 2px 8px;
+}
+
+.bench-row .seat:last-child {
+  border-radius: 2px 8px 8px 2px;
 }
 
 /* Add an armrest look using box-shadow */
 .seat::after {
   content: '';
   position: absolute;
-  bottom: 0px;
-  left: -2px;
-  right: -2px;
-  height: 4px;
-  background: rgba(0, 0, 0, 0.3);
+  top: 4px;
+  left: 2px;
+  right: 2px;
+  bottom: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 2px;
+  pointer-events: none;
 }
 
 .seat:hover:not(.booked):not(.locked) {
@@ -181,6 +196,57 @@ body {
 .seat.locked {
   background-color: var(--seat-locked);
   cursor: not-allowed;
+}
+
+/* Section Transformations for Curving */
+.section-left {
+  transform: rotate(12deg) translateY(20px);
+  transform-origin: bottom right;
+}
+
+.section-right {
+  transform: rotate(-12deg) translateY(20px);
+  transform-origin: bottom left;
+}
+
+.section-middle {
+  transform: translateY(-5px);
+}
+
+/* Gap and Exit Gates */
+.gap-divider {
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.exit-gate {
+  width: 40px;
+  height: 12px;
+  background: #065f46; /* Emergency green */
+  color: #10b981;
+  font-size: 8px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  letter-spacing: 1px;
+  border-top: 2px solid #10b981;
+}
+
+.exit-gate::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  width: 2px;
+  height: 15px;
+  background: rgba(16, 185, 129, 0.2);
 }
 
 .screen {
