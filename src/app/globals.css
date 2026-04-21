@@ -1,18 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@400;700&family=Londrina+Solid:wght@400;900&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Londrina+Solid:wght@400;900&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --background: #000000;
-  --bg-gradient: radial-gradient(circle at top, #2d0a1b 0%, #000000 100%);
-  --foreground: #ffffff;
-  --primary: #f2cc0c; /* Vibrant yellow from photo */
-  --primary-hover: #d4b43c;
-  --accent-pink: #b13e8d; /* Pink from photo background */
+  --background: #020617; /* Specific Dark Blue */
+  --bg-gradient: radial-gradient(circle at center, #020617 0%, #000000 100%);
+  --foreground: #fdf2f8;
+  --primary: #f0c814; /* Specific Yellow from image */
+  --primary-hover: #eab308;
+  --accent-pink: #b13e8d; /* Specific Pink from image background */
   --seat-available: #1e3a8a;
   --seat-locked: #eab308;
-  --seat-booked: #8b1313; /* Darker red */
+  --seat-booked: #8b1313;
   --seat-selected: #f472b6;
-  --card-bg: rgba(0, 0, 0, 0.7);
-  --border: rgba(242, 204, 12, 0.3);
+  --card-bg: rgba(2, 6, 23, 0.8);
+  --border: rgba(177, 62, 141, 0.3); /* Pink border */
 }
 
 * {
@@ -97,7 +97,7 @@ body::before {
 }
 
 .title-serif {
-  font-family: 'Cinzel', serif;
+  font-family: 'DM Serif Display', serif;
   color: #fff;
   line-height: 0.9;
   white-space: nowrap;

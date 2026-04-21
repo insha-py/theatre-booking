@@ -167,19 +167,36 @@ export default function Home() {
       {step === 1 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '800px' }}>
           
-          {/* Main Image Title */}
-          <div style={{ width: '100%', maxWidth: '500px', marginBottom: '2rem', position: 'relative' }}>
-            <img 
-              src="/title_header.png" 
-              alt="All My Friends Are Cheats" 
-              style={{ width: '100%', height: 'auto', display: 'block', filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.8))' }} 
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            {/* Fallback CSS Title */}
-            <div className="movie-title" style={{ display: 'none' }}>
+          {/* Main Title with Circular Pink Backdrop */}
+          <div style={{ 
+            position: 'relative', 
+            width: '100%', 
+            maxWidth: '500px', 
+            aspectRatio: '1/1', 
+            marginBottom: '2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            {/* The Pink Circle Backdrop */}
+            <div style={{
+              position: 'absolute',
+              width: '90%',
+              height: '90%',
+              borderRadius: '50%',
+              background: 'var(--accent-pink)',
+              boxShadow: '0 0 60px rgba(177, 62, 141, 0.4)',
+              zIndex: 1
+            }}></div>
+
+            {/* The Title Container (Simulating the suitcase/poster look) */}
+            <div className="movie-title" style={{ 
+              zIndex: 10, 
+              background: '#000', 
+              padding: '2rem 1.5rem',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.9)',
+              border: '2px solid rgba(255,255,255,0.1)'
+            }}>
               <div className="title-white-stack">
                 <span className="title-serif all-my">ALL MY</span>
                 <span className="title-serif friends-are">FRIENDS ARE</span>
@@ -188,12 +205,12 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', zIndex: 10, borderTop: '2px solid var(--primary)', backgroundColor: 'rgba(0,0,0,0.8)' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', zIndex: 10, borderTop: '3px solid var(--primary)', backgroundColor: 'var(--card-bg)' }}>
             {status === 'loading' ? (
               <p style={{ textAlign: 'center', color: '#94a3b8' }}>Loading secure session...</p>
             ) : (
               <>
-                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--primary)', fontSize: '0.9rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--primary)', fontSize: '0.9rem', fontWeight: '900', letterSpacing: '3px', textTransform: 'uppercase' }}>
                   ASHOKA UNIVERSITY ACCESS
                 </p>
                 <button onClick={() => signIn('google')} className="button">
