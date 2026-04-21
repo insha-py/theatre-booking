@@ -167,42 +167,13 @@ export default function Home() {
       {step === 1 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '800px' }}>
           
-          {/* Main Title with Circular Pink Backdrop */}
-          <div style={{ 
-            position: 'relative', 
-            width: '100%', 
-            maxWidth: '500px', 
-            aspectRatio: '1/1', 
-            marginBottom: '2.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            {/* The Pink Circle Backdrop */}
-            <div style={{
-              position: 'absolute',
-              width: '90%',
-              height: '90%',
-              borderRadius: '50%',
-              background: 'var(--accent-pink)',
-              boxShadow: '0 0 60px rgba(177, 62, 141, 0.4)',
-              zIndex: 1
-            }}></div>
-
-            {/* The Title Container (Simulating the suitcase/poster look) */}
-            <div className="movie-title" style={{ 
-              zIndex: 10, 
-              background: '#000', 
-              padding: '2rem 1.5rem',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.9)',
-              border: '2px solid rgba(255,255,255,0.1)'
-            }}>
-              <div className="title-white-stack">
-                <span className="title-serif all-my">ALL MY</span>
-                <span className="title-serif friends-are">FRIENDS ARE</span>
-              </div>
-              <div className="title-yellow-cheats">CHEATS</div>
+          {/* Reverted Original Text Title */}
+          <div className="movie-title">
+            <div className="title-white-stack">
+              <span className="title-serif all-my">All My</span>
+              <span className="title-serif friends-are">Friends Are</span>
             </div>
+            <div className="title-yellow-cheats">CHEATS</div>
           </div>
 
           <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', zIndex: 10, borderTop: '3px solid var(--primary)', backgroundColor: 'var(--card-bg)' }}>
