@@ -165,23 +165,36 @@ export default function Home() {
   return (
     <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh'}}>
       {step === 1 && (
-        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '600px' }}>
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '800px' }}>
           
-          <div className="movie-title">
-            <div className="title-white-stack">
-              <span className="title-serif all-my">ALL MY</span>
-              <span className="title-serif friends-are">FRIENDS ARE</span>
+          {/* Main Image Title */}
+          <div style={{ width: '100%', maxWidth: '500px', marginBottom: '2rem', position: 'relative' }}>
+            <img 
+              src="/title_header.png" 
+              alt="All My Friends Are Cheats" 
+              style={{ width: '100%', height: 'auto', display: 'block', filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.8))' }} 
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            {/* Fallback CSS Title */}
+            <div className="movie-title" style={{ display: 'none' }}>
+              <div className="title-white-stack">
+                <span className="title-serif all-my">ALL MY</span>
+                <span className="title-serif friends-are">FRIENDS ARE</span>
+              </div>
+              <div className="title-yellow-cheats">CHEATS</div>
             </div>
-            <div className="title-yellow-cheats">CHEATS</div>
           </div>
 
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', zIndex: 10 }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', zIndex: 10, borderTop: '2px solid var(--primary)', backgroundColor: 'rgba(0,0,0,0.8)' }}>
             {status === 'loading' ? (
               <p style={{ textAlign: 'center', color: '#94a3b8' }}>Loading secure session...</p>
             ) : (
               <>
-                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '1rem', fontWeight: 'bold', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                  USE ASHOKA EMAIL
+                <p style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--primary)', fontSize: '0.9rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                  ASHOKA UNIVERSITY ACCESS
                 </p>
                 <button onClick={() => signIn('google')} className="button">
                   SIGN UP
@@ -190,26 +203,36 @@ export default function Home() {
             )}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '3rem', width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', flexWrap: 'nowrap', marginTop: '4rem', width: '100%', padding: '0 1rem' }}>
             {['maya', 'bedi', 'noor', 'rv', 'zara'].map((name) => (
-              <img 
-                key={name}
-                src={`/${name}.png`} 
-                alt={name} 
-                style={{ 
-                  width: 'calc(20% - 0.5rem)', 
-                  minWidth: '60px',
-                  maxWidth: '120px',
-                  borderRadius: '6px', 
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.5)', 
-                  objectFit: 'cover',
-                  aspectRatio: '2/3',
-                  filter: 'grayscale(30%) sepia(20%)',
-                  transition: 'transform 0.3s'
-                }} 
-                onMouseOver={e=>e.currentTarget.style.transform='scale(1.05)'}
-                onMouseOut={e=>e.currentTarget.style.transform='scale(1)'}
-              />
+              <div key={name} style={{ flex: 1, maxWidth: '120px' }}>
+                <img 
+                  src={`/${name}.png`} 
+                  alt={name} 
+                  style={{ 
+                    width: '100%', 
+                    borderRadius: '4px', 
+                    boxShadow: '0 6px 20px rgba(0,0,0,0.7)', 
+                    objectFit: 'cover',
+                    aspectRatio: '2/3',
+                    filter: 'grayscale(40%) contrast(110%) sepia(10%)',
+                    transition: 'all 0.4s ease',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                  }} 
+                  className="character-poster"
+                  onMouseOver={e => {
+                    e.currentTarget.style.transform = 'scale(1.1) translateY(-10px)';
+                    e.currentTarget.style.filter = 'grayscale(0%) contrast(100%)';
+                    e.currentTarget.style.borderColor = 'var(--primary)';
+                  }}
+                  onMouseOut={e => {
+                    e.currentTarget.style.transform = 'scale(1) translateY(0)';
+                    e.currentTarget.style.filter = 'grayscale(40%) contrast(110%) sepia(10%)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                  }}
+                />
+                <p style={{ textAlign: 'center', fontSize: '0.6rem', marginTop: '0.5rem', color: '#666', textTransform: 'uppercase', letterSpacing: '1px' }}>{name}</p>
+              </div>
             ))}
           </div>
         </div>

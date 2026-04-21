@@ -1,16 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@400;700&family=Londrina+Solid:wght@400;900&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --background: #020617; /* Very dark blue */
-  --foreground: #fdf2f8; /* Soft pink-white */
-  --primary: #efcc46; /* Cinema Yellow */
+  --background: #000000;
+  --bg-gradient: radial-gradient(circle at top, #2d0a1b 0%, #000000 100%);
+  --foreground: #ffffff;
+  --primary: #f2cc0c; /* Vibrant yellow from photo */
   --primary-hover: #d4b43c;
-  --seat-available: #1e3a8a; /* Deep neon blue */
+  --accent-pink: #b13e8d; /* Pink from photo background */
+  --seat-available: #1e3a8a;
   --seat-locked: #eab308;
-  --seat-booked: #be123c; /* Dark cinema red */
-  --seat-selected: #f472b6; /* Hot pink (keeps it distinct from primary buttons) */
-  --card-bg: rgba(15, 23, 42, 0.85); /* Darker blue panel */
-  --border: rgba(239, 204, 70, 0.2); /* Translucent yellow border */
+  --seat-booked: #8b1313; /* Darker red */
+  --seat-selected: #f472b6;
+  --card-bg: rgba(0, 0, 0, 0.7);
+  --border: rgba(242, 204, 12, 0.3);
 }
 
 * {
@@ -20,12 +22,27 @@
 }
 
 body {
-  background-color: var(--background);
+  background: var(--bg-gradient);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+/* Texture overlay for grainy feel */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://www.transparenttextures.com/patterns/60-lines.png"); /* Subtle texture */
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 100;
 }
 
 .glass-panel {
@@ -100,15 +117,16 @@ body {
 
 .title-yellow-cheats {
   font-family: 'Londrina Solid', cursive;
-  color: #efcc46; /* Matching the image yellow */
+  color: var(--primary);
   font-size: clamp(5rem, 15vw, 10rem);
   line-height: 0.8;
   letter-spacing: -2px;
   text-transform: uppercase;
   z-index: 5;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
   /* Give it that irregular hand-drawn tilt */
   transform: rotate(-1deg) skew(-2deg);
+  -webkit-text-stroke: 1px rgba(0,0,0,0.5);
 }
 
 @media (max-width: 600px) {
