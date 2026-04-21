@@ -215,12 +215,12 @@ body {
 /* Outer shell that constrains everything */
 .theatre-layout {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Desktop default */
   align-items: flex-end;
   gap: 0;
   margin: 0 auto;
   min-width: min-content;
-  padding: 0 40px 40px;
+  padding: 0 20px 40px;
   transform: rotateX(22deg); /* Creates the floor depth feel */
   transform-style: preserve-3d;
 }
@@ -433,12 +433,13 @@ body {
   .glass-panel { padding: 1rem 0.6rem; }
   .screen { margin-bottom: 2rem; }
   .theatre-layout {
-    justify-content: flex-start; /* Ensure scroll starts at the far left edge */
-    padding: 0 40px 60px; /* Reduced side padding (relying on flex-start now) */
-    transform: rotateX(15deg);
-    min-width: min-content; /* Allow it to set its own scrollable width */
+    justify-content: flex-start !important; /* Force left alignment on mobile */
+    padding: 0 15px 60px !important; 
+    transform: rotateX(15deg) !important;
+    margin: 0 !important; /* Remove centered margin */
   }
   .theatre-floor {
+    justify-content: flex-start !important;
     overflow: visible;
   }
   /* Simplified transforms for mobile reached edges */

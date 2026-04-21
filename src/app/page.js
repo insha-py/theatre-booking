@@ -234,7 +234,7 @@ export default function Home() {
                 className="button"
                 style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
               >
-                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th APRIL</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
               </button>
               <button 
@@ -242,7 +242,7 @@ export default function Home() {
                 className="button"
                 style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
               >
-                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th APRIL</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
               </button>
               <button 
@@ -325,27 +325,27 @@ export default function Home() {
           <div className="glass-panel" style={{textAlign: 'center', padding: '2.5rem'}}>
             <h2 className="title-yellow-cheats" style={{fontSize: '3rem', marginBottom: '1rem'}}>BOOKED!</h2>
             
-            <div style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(239, 204, 70, 0.1)'}}>
-              <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '1px'}}>Booking Details</p>
+            <div className="ticket-card" style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(239, 204, 70, 0.1)'}}>
+              <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1.2rem', letterSpacing: '1px', borderBottom: '1px solid rgba(239, 204, 70, 0.1)', paddingBottom: '0.5rem'}}>Booking Details</p>
               
-              <div style={{marginBottom: '1rem', display: 'flex', justifyContent: 'space-between'}}>
+              <div style={{marginBottom: '1.2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap'}}>
                 <div>
-                  <p style={{fontSize: '0.8rem', color: '#94a3b8'}}>Date:</p>
-                  <p style={{fontSize: '1rem', fontWeight: 'bold'}}>{selectedDate === '2026-04-25' ? '25th Apr (Sat)' : '26th Apr (Sun)'}</p>
+                  <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Show Date:</p>
+                  <p style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'white'}}>{selectedDate === '2026-04-25' ? '25th April (Saturday)' : '26th April (Sunday)'}</p>
                 </div>
-                <div style={{textAlign: 'right'}}>
-                  <p style={{fontSize: '0.8rem', color: '#94a3b8'}}>Email:</p>
-                  <p style={{fontSize: '0.9rem'}}>{bookingDetails?.userEmail}</p>
+                <div style={{minWidth: '150px'}}>
+                  <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Booked By:</p>
+                  <p style={{fontSize: '0.9rem', color: 'white', wordBreak: 'break-all'}}>{bookingDetails?.userEmail}</p>
                 </div>
               </div>
 
-              <div>
-                <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem'}}>Seats:</p>
+              <div style={{marginTop: '1rem'}}>
+                <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.8rem'}}>Selected Seats:</p>
                 {bookingDetails?.seats && Array.isArray(bookingDetails.seats) ? (
-                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
+                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.8rem'}}>
                     {bookingDetails.seats.map((s, i) => (
-                      <div key={i} style={{background: 'rgba(239, 204, 70, 0.1)', border: '1px solid var(--primary)', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.9rem'}}>
-                        <span style={{fontWeight: 'bold'}}>{s.section}</span> • Row {s.row} • Seat {s.number}
+                      <div key={i} style={{background: 'rgba(239, 204, 70, 0.1)', border: '1px solid var(--primary)', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.2)'}}>
+                        <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>{s.section}</span> • <span style={{color: '#fff'}}>Row {s.row}</span> • <span style={{color: '#fff'}}>Seat {s.number}</span>
                       </div>
                     ))}
                   </div>
