@@ -4,45 +4,49 @@ import { prisma } from '@/lib/prisma';
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
+    const date = searchParams.get('date');
     const reset = searchParams.get('reset') === 'true';
 
     if (reset) {
-      console.log('Resetting seats...');
+      console.log('Resetting all seats...');
       await prisma.seat.deleteMany();
     }
 
-    let seats = await prisma.seat.findMany();
+    if (!date) {
+      return NextResponse.json({ error: 'Date is required' }, { status: 400 });
+    }
 
-    // If it's empty, let's initialize the seats!
-    if (seats.length === 0) {
-      console.log('Initializing seeds with new layout...');
+    let seats = await prisma.seat.findMany({ where: { showDate: date } });
+
+    // If it's empty for this date, let's initialize if it's one of our target dates
+    if (seats.length === 0 && (date === '2026-04-25' || date === '2026-04-26')) {
+      console.log(`Initializing seats for ${date}...`);
       const initSeats = [];
 
       // LEFT section: 3 rows x 7 seats = 21
       for (let r = 1; r <= 3; r++) {
         for (let n = 1; n <= 7; n++) {
-          initSeats.push({ section: 'LEFT', row: r, number: n });
+          initSeats.push({ section: 'LEFT', row: r, number: n, showDate: date });
         }
       }
 
       // MIDDLE section: 5 rows
-      // Rows 1-2: 21 seats each, Rows 3-5: 28 seats each
       for (let r = 1; r <= 5; r++) {
         const capacity = r <= 2 ? 21 : 28;
         for (let n = 1; n <= capacity; n++) {
-          initSeats.push({ section: 'MIDDLE', row: r, number: n });
+          initSeats.push({ section: 'MIDDLE', row: r, number: n, showDate: date });
         }
       }
 
       // RIGHT section: 3 rows x 7 seats = 21
       for (let r = 1; r <= 3; r++) {
         for (let n = 1; n <= 7; n++) {
-          initSeats.push({ section: 'RIGHT', row: r, number: n });
+          initSeats.push({ section: 'RIGHT', row: r, number: n, showDate: date });
         }
       }
 
       await prisma.seat.createMany({ data: initSeats });
-      seats = await prisma.seat.findMany();
+      seats = await prisma.seat.findMany({ where: { showDate: date } });
     }
 
     // Now let's release any locks that expired (older than 9 minutes)
@@ -54,7 +58,7 @@ export async function GET(request) {
         where: { id: { in: locksToRelease.map(s => s.id) } },
         data: { status: 'AVAILABLE', lockedUntil: null, userEmail: null }
       });
-      seats = await prisma.seat.findMany();
+      seats = await prisma.seat.findMany({ where: { showDate: date } });
     }
 
     return NextResponse.json({ seats });

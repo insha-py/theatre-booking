@@ -6,9 +6,12 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const [step, setStep] = useState(1); // 1: Login, 3: Seats, 4: Payment, 5: Success
+  const [step, setStep] = useState(1); // 1: Login, 2: Date Selection, 3: Seats, 5: Success
   const [loading, setLoading] = useState(false);
   
+  // Date state
+  const [selectedDate, setSelectedDate] = useState(null); // '2026-04-25' or '2026-04-26'
+
   // Seat state
   const [seats, setSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -16,36 +19,37 @@ export default function Home() {
   // Booking state
   const [bookingDetails, setBookingDetails] = useState(null);
 
-  // Auto login if session exists
+  // Auto login/redirect logic
   useEffect(() => {
     if (status === 'authenticated') {
-      setStep(3);
+      if (step === 1) setStep(2);
     } else if (status === 'unauthenticated') {
       setStep(1);
     }
-  }, [status]);
+  }, [status, step]);
 
   // Initial fetch for seats when we reach step 3
   useEffect(() => {
-    if (step === 3 && status === 'authenticated') {
+    if (step === 3 && status === 'authenticated' && selectedDate) {
       fetchSeats();
       const interval = setInterval(fetchSeats, 5000); // Poll every 5s for updates
       return () => clearInterval(interval);
     }
-  }, [step, status]);
+  }, [step, status, selectedDate]);
 
   const fetchSeats = async () => {
+    if (!selectedDate) return;
     try {
-      const res = await fetch('/api/seats');
+      const res = await fetch(`/api/seats?date=${selectedDate}`);
       const data = await res.json();
       if (data.seats) setSeats(data.seats);
-    } catch(err) {}
+    } catch(err) {
+      console.error('Fetch error:', err);
+    }
   };
 
-
-
-  const toggleSeat = (id, status) => {
-    if (status !== 'AVAILABLE') return;
+  const toggleSeat = (id, seatStatus) => {
+    if (seatStatus !== 'AVAILABLE') return;
     if (selectedSeats.includes(id)) {
       setSelectedSeats(prev => prev.filter(s => s !== id));
     } else {
@@ -58,13 +62,13 @@ export default function Home() {
   };
 
   const handleBookSeats = async () => {
-    if (selectedSeats.length === 0) return;
+    if (selectedSeats.length === 0 || !selectedDate) return;
     setLoading(true);
     try {
       const res = await fetch('/api/seats/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ seatIds: selectedSeats })
+        body: JSON.stringify({ seatIds: selectedSeats, showDate: selectedDate })
       });
       const data = await res.json();
       if (res.ok) {
@@ -163,7 +167,6 @@ export default function Home() {
       {step === 1 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '600px' }}>
           
-          {/* Main Title Outside the Box */}
           <div className="movie-title">
             <div className="title-white-stack">
               <span className="title-serif all-my">ALL MY</span>
@@ -172,7 +175,6 @@ export default function Home() {
             <div className="title-yellow-cheats">CHEATS</div>
           </div>
 
-          {/* Login Box */}
           <div className="glass-panel" style={{ width: '100%', maxWidth: '400px', zIndex: 10 }}>
             {status === 'loading' ? (
               <p style={{ textAlign: 'center', color: '#94a3b8' }}>Loading secure session...</p>
@@ -188,7 +190,6 @@ export default function Home() {
             )}
           </div>
 
-          {/* Character Posters Row */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '3rem', width: '100%' }}>
             {['maya', 'bedi', 'noor', 'rv', 'zara'].map((name) => (
               <img 
@@ -214,18 +215,65 @@ export default function Home() {
         </div>
       )}
 
+      {step === 2 && (
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '600px' }}>
+          <div className="movie-title small">
+            <div className="title-white-stack">
+              <span className="title-serif all-my">SELECT YOUR</span>
+              <span className="title-serif friends-are">SHOW</span>
+            </div>
+            <div className="title-yellow-cheats">DATE</div>
+          </div>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '450px', zIndex: 10 }}>
+            <p style={{ textAlign: 'center', marginBottom: '2rem', color: '#94a3b8', fontSize: '1rem', fontWeight: 'bold', letterSpacing: '1px' }}>
+              SATURDAY OR SUNDAY?
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <button 
+                onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
+                className="button"
+                style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
+              >
+                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th APRIL</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
+              </button>
+              <button 
+                onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
+                className="button"
+                style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
+              >
+                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th APRIL</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
+              </button>
+              <button 
+                onClick={() => signOut()} 
+                style={{ marginTop: '1rem', background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {step === 3 && (
         <div className="animate-fade-in" style={{width: '100%', maxWidth: '1200px'}}>
           <div className="movie-title small">
             <div className="title-white-stack">
               <span className="title-serif all-my">SELECT YOUR</span>
-              <span className="title-serif friends-are">THEATRE</span>
+              <span className="title-serif friends-are">{selectedDate === '2026-04-25' ? 'SATURDAY' : 'SUNDAY'}</span>
             </div>
             <div className="title-yellow-cheats">SEATS</div>
           </div>
-          <p style={{textAlign: 'center', color: '#94a3b8', marginBottom: '1rem'}}>Selected: {selectedSeats.length}/2</p>
+          
+          <div style={{display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '1rem'}}>
+             <button onClick={() => setStep(2)} style={{background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+               ← Change Date
+             </button>
+             <p style={{textAlign: 'center', color: '#94a3b8'}}>Selected: {selectedSeats.length}/2</p>
+          </div>
 
-          <div className="glass-panel" style={{padding: '1.2rem'}}>
+          <div className="theatre-container-boxless" style={{padding: '1.2rem'}}>
             <div className="screen"></div>
             
             {seats.length > 0 ? (
@@ -245,7 +293,7 @@ export default function Home() {
                 </div>
               </div>
             ) : (
-              <div style={{textAlign: 'center', padding: '2rem'}}>Loading map...</div>
+              <div style={{textAlign: 'center', padding: '2rem'}}>Loading map for {selectedDate}...</div>
             )}
 
             <div className="legend">
@@ -254,21 +302,23 @@ export default function Home() {
               <div className="legend-item"><div className="legend-box" style={{backgroundColor: 'var(--seat-booked)'}}></div> Booked</div>
             </div>
 
-            <div style={{marginTop: '1.5rem', display: 'flex', justifyContent: 'center'}}>
-              <button 
-                className="button" 
-                style={{maxWidth: '300px'}} 
-                disabled={selectedSeats.length === 0 || loading}
-                onClick={handleBookSeats}
-              >
-                {loading ? 'Processing...' : 'Confirm Booking'}
-              </button>
+            <div style={{marginTop: '2.5rem', display: 'flex', justifyContent: 'center'}}>
+              <div className="glass-panel" style={{padding: '1.5rem', width: '100%', maxWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <button 
+                  className="button" 
+                  disabled={selectedSeats.length === 0 || loading}
+                  onClick={handleBookSeats}
+                >
+                  {loading ? 'Processing...' : 'Confirm Booking'}
+                </button>
+                <p style={{fontSize: '0.7rem', color: '#64748b', marginTop: '0.8rem', textAlign: 'center'}}>
+                  Max 2 seats per show. You are booking for {selectedDate === '2026-04-25' ? 'Saturday' : 'Sunday'}.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       )}
-
-
 
       {step === 5 && (
         <div className="animate-fade-in" style={{width: '100%', maxWidth: '500px', margin: '0 auto'}}>
@@ -278,15 +328,21 @@ export default function Home() {
             <div style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(239, 204, 70, 0.1)'}}>
               <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '1px'}}>Booking Details</p>
               
-              <div style={{marginBottom: '1rem'}}>
-                <p style={{fontSize: '0.9rem', color: '#94a3b8'}}>Email:</p>
-                <p style={{fontSize: '1rem', fontWeight: '600'}}>{bookingDetails?.userEmail}</p>
+              <div style={{marginBottom: '1rem', display: 'flex', justifyContent: 'space-between'}}>
+                <div>
+                  <p style={{fontSize: '0.8rem', color: '#94a3b8'}}>Date:</p>
+                  <p style={{fontSize: '1rem', fontWeight: 'bold'}}>{selectedDate === '2026-04-25' ? '25th Apr (Sat)' : '26th Apr (Sun)'}</p>
+                </div>
+                <div style={{textAlign: 'right'}}>
+                  <p style={{fontSize: '0.8rem', color: '#94a3b8'}}>Email:</p>
+                  <p style={{fontSize: '0.9rem'}}>{bookingDetails?.userEmail}</p>
+                </div>
               </div>
 
               <div>
-                <p style={{fontSize: '0.9rem', color: '#94a3b8'}}>Seats:</p>
+                <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem'}}>Seats:</p>
                 {bookingDetails?.seats && Array.isArray(bookingDetails.seats) ? (
-                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem'}}>
+                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
                     {bookingDetails.seats.map((s, i) => (
                       <div key={i} style={{background: 'rgba(239, 204, 70, 0.1)', border: '1px solid var(--primary)', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.9rem'}}>
                         <span style={{fontWeight: 'bold'}}>{s.section}</span> • Row {s.row} • Seat {s.number}
@@ -307,16 +363,25 @@ export default function Home() {
             
             <p style={{color: '#94a3b8', fontSize: '0.9rem', marginBottom: '2rem'}}>Present this QR code at the entrance.</p>
             
-            <button 
-              className="button" 
-              onClick={() => { setStep(3); setSelectedSeats([]); setBookingDetails(null); }}
-            >
-              Book More Seats
-            </button>
+            <div style={{display: 'flex', gap: '1rem'}}>
+              <button 
+                className="button" 
+                style={{flex: 1}}
+                onClick={() => { setStep(3); setSelectedSeats([]); setBookingDetails(null); }}
+              >
+                More for {selectedDate === '2026-04-25' ? 'Sat' : 'Sun'}
+              </button>
+              <button 
+                className="button" 
+                style={{flex: 1, background: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)'}}
+                onClick={() => { setStep(2); setSelectedSeats([]); setBookingDetails(null); }}
+              >
+                Other Date
+              </button>
+            </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }

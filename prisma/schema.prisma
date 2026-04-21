@@ -10,6 +10,7 @@ generator client {
 
 model Seat {
   id          String    @id @default(cuid())
+  showDate    String    // "2026-04-25", "2026-04-26"
   section     String    // "LEFT", "MIDDLE", "RIGHT"
   row         Int
   number      Int
@@ -20,6 +21,7 @@ model Seat {
 
 model Booking {
   id        String   @id @default(cuid())
+  showDate  String   // "2026-04-25", "2026-04-26"
   userEmail String
   seats     String   // comma-separated Seat IDs
   status    String   @default("CONFIRMED")

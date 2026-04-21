@@ -187,10 +187,20 @@ body {
   background: transparent;
 }
 
-.theatre-wrapper::-webkit-scrollbar { height: 5px; }
+.theatre-wrapper::-webkit-scrollbar { 
+  height: 8px; /* Slightly thicker for mobile */
+}
+.theatre-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
 .theatre-wrapper::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+  border-radius: 10px;
+  border: 2px solid var(--background); /* Creates a floating effect */
+}
+.theatre-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
 }
 
 /* New: Floor perspective wrapper */
@@ -434,6 +444,15 @@ body {
   /* Simplified transforms for mobile reached edges */
   .section-left { transform: rotateY(15deg) rotateZ(5deg); }
   .section-right { transform: rotateY(-15deg) rotateZ(-5deg); }
+
+  /* Ensure no box/border around seats on mobile */
+  .theatre-container-boxless {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
 }
 
 @media (max-width: 400px) {
