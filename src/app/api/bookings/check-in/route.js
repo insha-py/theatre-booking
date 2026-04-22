@@ -3,11 +3,23 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(request) {
   try {
-    const { bookingId } = await request.json();
+    let { bookingId } = await request.json();
 
     if (!bookingId) {
       return NextResponse.json({ error: 'Booking ID is required' }, { status: 400 });
     }
+
+    // Handle case where QR contains "Booking ID: abc-123..." text
+    if (bookingId.includes('Booking ID:')) {
+      const match = bookingId.match(/Booking ID:\s*([^\n\r]+)/);
+      if (match) {
+        bookingId = match[1].trim();
+      }
+    } else {
+      bookingId = bookingId.trim();
+    }
+
+    console.log("Attempting check-in for ID:", bookingId);
 
     // 1. Find the booking
     const booking = await prisma.booking.findUnique({

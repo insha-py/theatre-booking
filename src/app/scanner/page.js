@@ -21,7 +21,9 @@ export default function ScannerPage() {
 
       function onScanSuccess(decodedText) {
         // Success callback: decodedText is the bookingId
-        handleCheckIn(decodedText);
+        const cleanedId = decodedText?.trim();
+        console.log("Scanned QR Content:", cleanedId);
+        handleCheckIn(cleanedId);
         scanner.clear();
         setScanning(false);
       }
@@ -54,7 +56,12 @@ export default function ScannerPage() {
         setResult({ success: true, ...data.booking });
       } else {
         setError(data.error || 'Check-in failed');
-        setResult(data.booking ? { success: false, ...data.booking } : null);
+        // If it was already checked in, we still have the booking details in data.booking
+        if (data.booking) {
+          setResult({ success: false, ...data.booking, alreadyAttended: data.error === 'Already Checked In' });
+        } else {
+          setResult(null);
+        }
       }
     } catch (err) {
       setError('Connection error occurred');
