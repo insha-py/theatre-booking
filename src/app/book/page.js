@@ -86,7 +86,13 @@ export default function Home() {
     const ticketElement = document.getElementById('ticket-card-id');
     if (!ticketElement) return;
     try {
-      const canvas = await html2canvas(ticketElement, { backgroundColor: '#ffffff', scale: 2 });
+      const canvas = await html2canvas(ticketElement, { 
+        backgroundColor: '#ffffff', 
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: true
+      });
       const image = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = image;
@@ -305,7 +311,17 @@ export default function Home() {
 
       {step === 5 && (
         <div className="animate-fade-in" style={{width: '100%', maxWidth: '500px', margin: '0 auto'}}>
-          <div id="ticket-card-id" className="glass-panel" style={{textAlign: 'center', padding: '2.5rem', background: '#ffffff'}}>
+          <div 
+            id="ticket-card-id" 
+            style={{
+              textAlign: 'center', 
+              padding: '2.5rem', 
+              background: '#ffffff',
+              borderRadius: '16px',
+              border: '1px solid var(--border)',
+              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'
+            }}
+          >
             <div className="three-line-title" style={{marginBottom: '0'}}>
               <h2 className="three-line-3">BOOKED!</h2>
             </div>
@@ -342,7 +358,14 @@ export default function Home() {
 
             <div style={{background: 'white', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '1rem', boxShadow: '0 0 20px rgba(0,0,0,0.1)'}}>
               {bookingDetails?.qrCode && (
-                <img src={bookingDetails.qrCode} alt="Your Ticket QR" width={220} height={220} style={{display: 'block'}} />
+                <img 
+                  src={bookingDetails.qrCode} 
+                  alt="Your Ticket QR" 
+                  width={220} 
+                  height={220} 
+                  style={{display: 'block'}} 
+                  crossOrigin="anonymous" 
+                />
               )}
             </div>
             
