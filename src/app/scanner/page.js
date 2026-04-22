@@ -118,9 +118,14 @@ export default function ScannerPage() {
 
       <div style={{ marginTop: '2rem', textAlign: 'center', color: '#64748b' }}>
         <p style={{ fontSize: '0.8rem' }}>Scan the QR code from the user's booking confirmation.</p>
-        <button onClick={() => window.location.href = '/'} style={{ background: 'transparent', border: 'none', color: 'var(--primary)', marginTop: '1rem', cursor: 'pointer', textDecoration: 'underline' }}>
-          Back to Home
-        </button>
+        <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+          <button onClick={() => window.location.href = '/'} style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', textDecoration: 'underline' }}>
+            Back to Home
+          </button>
+          <a href="/api/admin/backup" download style={{ background: 'var(--primary)', color: 'white', padding: '0.5rem 1rem', borderRadius: '8px', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 'bold' }}>
+            ⬇ Backup Database
+          </a>
+        </div>
       </div>
     </div>
   );
