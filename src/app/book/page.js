@@ -162,6 +162,11 @@ export default function Home() {
     <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh'}}>
       {step === 1 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', maxWidth: '800px', flex: 1 }}>
+          <div className="three-line-title">
+            <span className="three-line-1">All My</span>
+            <span className="three-line-2">Friends Are</span>
+            <span className="three-line-3">Cheats</span>
+          </div>
           <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', zIndex: 10, borderTop: '3px solid var(--primary)', backgroundColor: 'var(--card-bg)' }}>
             {status === 'loading' ? (
               <p style={{ textAlign: 'center', color: 'var(--accent-blue)' }}>Loading secure session...</p>
@@ -181,12 +186,10 @@ export default function Home() {
 
       {step === 2 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '600px' }}>
-          <div className="movie-title small">
-            <div className="title-white-stack">
-              <span className="title-serif all-my">SELECT YOUR</span>
-              <span className="title-serif friends-are">SHOW</span>
-            </div>
-            <div className="title-yellow-cheats">DATE</div>
+          <div className="three-line-title">
+            <span className="three-line-1">Select</span>
+            <span className="three-line-2">Your</span>
+            <span className="three-line-3">Date</span>
           </div>
           <div className="glass-panel" style={{ width: '100%', maxWidth: '450px', zIndex: 10 }}>
             <p style={{ textAlign: 'center', marginBottom: '2rem', color: '#94a3b8', fontSize: '1rem', fontWeight: 'bold', letterSpacing: '1px' }}>
@@ -222,12 +225,10 @@ export default function Home() {
 
       {step === 3 && (
         <div className="animate-fade-in" style={{width: '100%', maxWidth: '1200px'}}>
-          <div className="movie-title small">
-            <div className="title-white-stack">
-              <span className="title-serif all-my">SELECT YOUR</span>
-              <span className="title-serif friends-are">{selectedDate === '2026-04-25' ? 'SATURDAY' : 'SUNDAY'}</span>
-            </div>
-            <div className="title-yellow-cheats">SEATS</div>
+          <div className="three-line-title">
+            <span className="three-line-1">Select</span>
+            <span className="three-line-2">Your</span>
+            <span className="three-line-3">Seat</span>
           </div>
           
           <div style={{display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '1rem'}}>
@@ -287,7 +288,9 @@ export default function Home() {
       {step === 5 && (
         <div className="animate-fade-in" style={{width: '100%', maxWidth: '500px', margin: '0 auto'}}>
           <div className="glass-panel" style={{textAlign: 'center', padding: '2.5rem'}}>
-            <h2 className="title-yellow-cheats" style={{fontSize: '3rem', marginBottom: '1rem'}}>BOOKED!</h2>
+            <div className="three-line-title" style={{marginBottom: '0'}}>
+              <h2 className="three-line-3">BOOKED!</h2>
+            </div>
             
             <div className="ticket-card" style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(239, 204, 70, 0.1)'}}>
               <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1.2rem', letterSpacing: '1px', borderBottom: '1px solid rgba(239, 204, 70, 0.1)', paddingBottom: '0.5rem'}}>Booking Details</p>

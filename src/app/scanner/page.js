@@ -70,12 +70,10 @@ export default function ScannerPage() {
 
   return (
     <div className="container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
-      <div className="movie-title small">
-        <div className="title-white-stack">
-          <span className="title-serif all-my">ATTENDANCE</span>
-          <span className="title-serif friends-are">ENTRY</span>
-        </div>
-        <div className="title-yellow-cheats">SCANNER</div>
+      <div className="three-line-title">
+        <span className="three-line-1">Attendance</span>
+        <span className="three-line-2">Entry</span>
+        <span className="three-line-3">Scanner</span>
       </div>
 
       <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', backgroundColor: 'var(--card-bg)', borderTop: '4px solid var(--accent-pink)' }}>

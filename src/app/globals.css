@@ -1,18 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@1,500&family=Londrina+Solid:wght@400;900&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@1,500&family=Londrina+Solid:wght@400;900&family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&family=Chango&display=swap');
 
 :root {
-  --background: #ffffff; /* White Background */
+  --background: #ffffff;
   --bg-gradient: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
-  --foreground: #020617; /* Dark Blue Text */
-  --primary: #b13e8d; /* Pink is primary on white for better contrast */
-  --primary-yellow: #f0c814; /* Yellow from image */
-  --accent-blue: #020617;
-  --seat-available: #cbd5e1; /* Light grey for available */
+  --foreground: #000000;
+  --primary: #E36D9B; /* Primary Action Pink */
+  --primary-yellow: #f0c814;
+  --accent-blue: #2B4789; /* Exit Elements */
+  --stage-cyan: #10B1A3; /* Stage Color */
+  --seat-available: #cbd5e1;
   --seat-locked: #facc15;
   --seat-booked: #f87171;
-  --seat-selected: #b13e8d;
+  --seat-selected: #E36D9B;
   --card-bg: rgba(255, 255, 255, 0.85);
-  --border: rgba(177, 62, 141, 0.2); 
+  --border: rgba(227, 109, 155, 0.2); 
 }
 
 * {
@@ -23,8 +24,8 @@
 
 body {
   background: var(--bg-gradient);
-  color: var(--foreground);
-  font-family: 'Inter', sans-serif;
+  color: #000000;
+  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -67,79 +68,45 @@ body::before {
     -3px 0px rgba(240, 200, 20, 0.4);
 }
 
-/* ── Custom Movie Title ─────────────────────────── */
-.movie-title {
-  position: relative;
+.three-line-title {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   padding-top: 1rem;
 }
 
-.movie-title.small {
-  margin-bottom: 2rem;
-  transform: scale(0.7);
-  margin-top: -1rem;
-}
-
-.title-white-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: min-content;
-  z-index: 10;
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-80%); /* Offset slightly left to center the whole group */
-}
-
-.title-serif {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-weight: 500;
-  color: var(--accent-blue);
-  line-height: 0.9;
-  white-space: nowrap;
+.three-line-1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.2rem, 3.5vw, 2.5rem);
+  font-weight: 400;
+  color: #000000;
+  line-height: 1.1;
   letter-spacing: 1px;
 }
 
-.title-serif.all-my {
-  font-size: clamp(1.2rem, 3vw, 2rem);
-  font-weight: 400;
-  margin-left: auto; /* Push Row 1 to the right relative to Row 2 */
-}
-
-.title-serif.friends-are {
-  font-size: clamp(1.5rem, 4vw, 2.8rem);
+.three-line-2 {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: clamp(1.5rem, 4.5vw, 3rem);
   font-weight: 700;
+  color: #000000;
+  line-height: 1.1;
+  letter-spacing: 1px;
 }
 
-.title-yellow-cheats {
-  font-family: 'Londrina Solid', cursive;
+.three-line-3 {
+  font-family: 'Chango', cursive;
+  font-size: clamp(3rem, 10vw, 6rem);
   color: var(--primary);
-  font-size: clamp(5rem, 15vw, 10rem);
-  line-height: 0.8;
-  letter-spacing: -2px;
+  line-height: 1;
   text-transform: uppercase;
-  z-index: 5;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-  /* Give it that irregular hand-drawn tilt */
-  transform: rotate(-1deg) skew(-2deg);
-  -webkit-text-stroke: 1px rgba(0,0,0,0.5);
-}
-
-@media (max-width: 600px) {
-  .title-white-stack {
-    top: -10px;
-    transform: translateX(-70%);
-  }
+  margin-top: 0.5rem;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
 .button {
   background-color: var(--primary);
-  color: #020617; /* Dark text on yellow for high contrast */
+  color: #ffffff; /* White text on pink action element */
   border: none;
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
@@ -357,15 +324,15 @@ body::before {
 }
 
 .exit-gate {
-  background: rgba(34, 197, 94, 0.1);
-  color: #4ade80;
-  border: 1.5px solid #22c55e;
+  background: rgba(43, 71, 137, 0.1);
+  color: var(--accent-blue);
+  border: 1.5px solid var(--accent-blue);
   padding: 3px 10px;
   border-radius: 100px;
   font-size: 0.6rem;
   font-weight: 800;
   letter-spacing: 1px;
-  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 15px rgba(43, 71, 137, 0.4);
   text-transform: uppercase;
   position: relative;
   bottom: -60px; /* Pushed further down */
@@ -375,7 +342,7 @@ body::before {
 
 /* ── Stage ───────────────────────────────────────── */
 .screen {
-  background: linear-gradient(180deg, rgba(59,130,246,0.6) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(16, 177, 163, 0.6) 0%, transparent 100%);
   height: clamp(36px, 5vw, 60px);
   width: 45%; 
   min-width: 300px;
@@ -383,7 +350,7 @@ body::before {
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   text-align: center;
   position: relative;
-  box-shadow: 0 -20px 45px rgba(59,130,246,0.25);
+  box-shadow: 0 -20px 45px rgba(16, 177, 163, 0.25);
   z-index: 20;
 }
 
