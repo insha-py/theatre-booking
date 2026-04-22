@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Script from 'next/script';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import html2canvas from 'html2canvas';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -79,6 +80,23 @@ export default function Home() {
       alert('Network issue booking seats');
     }
     setLoading(false);
+  };
+
+  const handleDownloadTicket = async () => {
+    const ticketElement = document.getElementById('ticket-card-id');
+    if (!ticketElement) return;
+    try {
+      const canvas = await html2canvas(ticketElement, { backgroundColor: '#ffffff', scale: 2 });
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `Theatre-Ticket-${bookingDetails?.userEmail || 'booked'}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error('Failed to download ticket', err);
+    }
   };
 
   // Rendering Sections
@@ -287,13 +305,13 @@ export default function Home() {
 
       {step === 5 && (
         <div className="animate-fade-in" style={{width: '100%', maxWidth: '500px', margin: '0 auto'}}>
-          <div className="glass-panel" style={{textAlign: 'center', padding: '2.5rem'}}>
+          <div id="ticket-card-id" className="glass-panel" style={{textAlign: 'center', padding: '2.5rem', background: '#ffffff'}}>
             <div className="three-line-title" style={{marginBottom: '0'}}>
               <h2 className="three-line-3">BOOKED!</h2>
             </div>
             
-            <div className="ticket-card" style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(239, 204, 70, 0.1)'}}>
-              <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1.2rem', letterSpacing: '1px', borderBottom: '1px solid rgba(239, 204, 70, 0.1)', paddingBottom: '0.5rem'}}>Booking Details</p>
+            <div className="ticket-card" style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(0,0,0,0.02)', borderRadius: '12px', border: '1px solid rgba(156, 25, 88, 0.1)'}}>
+              <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1.2rem', letterSpacing: '1px', borderBottom: '1px solid rgba(156, 25, 88, 0.1)', paddingBottom: '0.5rem'}}>Booking Details</p>
               
               <div style={{marginBottom: '1.2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap'}}>
                 <div>
@@ -311,7 +329,7 @@ export default function Home() {
                 {bookingDetails?.seats && Array.isArray(bookingDetails.seats) ? (
                   <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.8rem'}}>
                     {bookingDetails.seats.map((s, i) => (
-                      <div key={i} style={{background: 'rgba(239, 204, 70, 0.1)', border: '1px solid var(--primary)', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.2)'}}>
+                      <div key={i} style={{background: 'rgba(156, 25, 88, 0.05)', border: '1px solid var(--primary)', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)'}}>
                         <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>{s.section}</span> • <span style={{color: 'var(--accent-blue)'}}>Row {s.row}</span> • <span style={{color: 'var(--accent-blue)'}}>Seat {s.number}</span>
                       </div>
                     ))}
@@ -322,18 +340,27 @@ export default function Home() {
               </div>
             </div>
 
-            <div style={{background: 'white', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '2rem', boxShadow: '0 0 30px rgba(0,0,0,0.5)'}}>
+            <div style={{background: 'white', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '1rem', boxShadow: '0 0 20px rgba(0,0,0,0.1)'}}>
               {bookingDetails?.qrCode && (
                 <img src={bookingDetails.qrCode} alt="Your Ticket QR" width={220} height={220} style={{display: 'block'}} />
               )}
             </div>
             
-            <p style={{color: '#94a3b8', fontSize: '0.9rem', marginBottom: '2rem'}}>Present this QR code at the entrance.</p>
-            
+            <p style={{color: '#94a3b8', fontSize: '0.9rem', marginBottom: '0.5rem'}}>Present this QR code at the entrance.</p>
+          </div>
+          
+          <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem'}}>
+            <button 
+              className="button"
+              style={{ padding: '1rem', fontSize: '1.2rem', boxShadow: '0 4px 15px rgba(156, 25, 88, 0.3)' }}
+              onClick={handleDownloadTicket}
+            >
+              ⬇ DOWNLOAD TICKET
+            </button>
             <div style={{display: 'flex', gap: '1rem'}}>
               <button 
                 className="button" 
-                style={{flex: 1}}
+                style={{flex: 1, background: 'rgba(0,0,0,0.05)', color: 'var(--accent-blue)'}}
                 onClick={() => { setStep(3); setSelectedSeats([]); setBookingDetails(null); }}
               >
                 More for {selectedDate === '2026-04-25' ? 'Sat' : 'Sun'}
