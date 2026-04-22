@@ -86,19 +86,19 @@ export default function ScannerPage() {
             {error ? (
               <div style={{ padding: '1.5rem', borderRadius: '12px', backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', marginBottom: '1.5rem' }}>
                 <h3 style={{ color: '#ef4444', marginBottom: '0.5rem' }}>ERROR</h3>
-                <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{error}</p>
+                <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#b91c1c' }}>{error}</p>
               </div>
             ) : result?.loading ? (
               <p>Verifying booking...</p>
             ) : (
-              <div style={{ padding: '1.5rem', borderRadius: '12px', backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid #22c55e', marginBottom: '1.5rem' }}>
-                <h3 style={{ color: '#22c55e', marginBottom: '0.5rem' }}>SUCCESSFUL CHECK-IN</h3>
-                <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white', wordBreak: 'break-all', overflowWrap: 'break-word' }}>{result?.userEmail}</p>
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '1rem', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ padding: '1.5rem', borderRadius: '12px', backgroundColor: 'rgba(34, 197, 94, 0.05)', border: '1px solid #22c55e', marginBottom: '1.5rem' }}>
+                <h3 style={{ color: '#16a34a', marginBottom: '0.5rem' }}>SUCCESSFUL CHECK-IN</h3>
+                <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent-blue)', wordBreak: 'break-all', overflowWrap: 'break-word' }}>{result?.userEmail}</p>
+                <div style={{ borderTop: '1px solid rgba(0,0,0,0.05)', marginTop: '1rem', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{result?.showDate}</p>
-                  <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                    <p style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.3rem' }}>Assigned Seats</p>
-                    <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>{result?.seats}</p>
+                  <div style={{ background: 'rgba(0,0,0,0.02)', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.05)' }}>
+                    <p style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', marginBottom: '0.3rem' }}>Assigned Seats</p>
+                    <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-blue)' }}>{result?.seats}</p>
                   </div>
                 </div>
               </div>

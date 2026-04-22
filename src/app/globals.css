@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@1,500&family=Londrina+Solid:wght@400;900&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --background: #020617; /* Specific Dark Blue */
-  --bg-gradient: radial-gradient(circle at center, #020617 0%, #000000 100%);
-  --foreground: #fdf2f8;
-  --primary: #f0c814; /* Specific Yellow from image */
-  --primary-hover: #eab308;
-  --accent-pink: #b13e8d; /* Specific Pink from image background */
-  --seat-available: #1e3a8a;
-  --seat-locked: #eab308;
-  --seat-booked: #8b1313;
-  --seat-selected: #f472b6;
-  --card-bg: rgba(2, 6, 23, 0.8);
-  --border: rgba(177, 62, 141, 0.3); /* Pink border */
+  --background: #ffffff; /* White Background */
+  --bg-gradient: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+  --foreground: #020617; /* Dark Blue Text */
+  --primary: #b13e8d; /* Pink is primary on white for better contrast */
+  --primary-yellow: #f0c814; /* Yellow from image */
+  --accent-blue: #020617;
+  --seat-available: #cbd5e1; /* Light grey for available */
+  --seat-locked: #facc15;
+  --seat-booked: #f87171;
+  --seat-selected: #b13e8d;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --border: rgba(177, 62, 141, 0.2); 
 }
 
 * {
@@ -52,7 +52,7 @@ body::before {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(217, 70, 239, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1), inset 0 0 20px rgba(177, 62, 141, 0.02);
 }
 
 .glitch-title { /* Keeping for potential use elsewhere */
@@ -63,9 +63,8 @@ body::before {
   margin-bottom: 1.5rem;
   color: #fff;
   text-shadow: 
-    3px 0px rgba(59, 130, 246, 0.8),
-    -3px 0px rgba(220, 38, 38, 0.8),
-    0px 2px rgba(16, 185, 129, 0.4);
+    3px 0px rgba(177, 62, 141, 0.4),
+    -3px 0px rgba(240, 200, 20, 0.4);
 }
 
 /* ── Custom Movie Title ─────────────────────────── */
@@ -100,7 +99,7 @@ body::before {
   font-family: 'Lora', serif;
   font-style: italic;
   font-weight: 500;
-  color: #fff;
+  color: var(--accent-blue);
   line-height: 0.9;
   white-space: nowrap;
   letter-spacing: 1px;

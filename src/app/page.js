@@ -236,20 +236,20 @@ export default function Home() {
               SATURDAY OR SUNDAY?
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <button 
-                onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
-                className="button"
-                style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
-              >
-                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
+                <button 
+                  onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
+                  className="button"
+                  style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
+                >
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
               </button>
-              <button 
-                onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
-                className="button"
-                style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
-              >
-                <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
+                <button 
+                  onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
+                  className="button"
+                  style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
+                >
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
               </button>
               <button 
@@ -338,11 +338,11 @@ export default function Home() {
               <div style={{marginBottom: '1.2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap'}}>
                 <div>
                   <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Show Date:</p>
-                  <p style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'white'}}>{selectedDate === '2026-04-25' ? '25th April (Saturday)' : '26th April (Sunday)'}</p>
+                  <p style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent-blue)'}}>{selectedDate === '2026-04-25' ? '25th April (Saturday)' : '26th April (Sunday)'}</p>
                 </div>
                 <div style={{minWidth: '150px'}}>
                   <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Booked By:</p>
-                  <p style={{fontSize: '0.9rem', color: 'white', wordBreak: 'break-all'}}>{bookingDetails?.userEmail}</p>
+                  <p style={{fontSize: '0.9rem', color: 'var(--accent-blue)', wordBreak: 'break-all'}}>{bookingDetails?.userEmail}</p>
                 </div>
               </div>
 
@@ -352,7 +352,7 @@ export default function Home() {
                   <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.8rem'}}>
                     {bookingDetails.seats.map((s, i) => (
                       <div key={i} style={{background: 'rgba(239, 204, 70, 0.1)', border: '1px solid var(--primary)', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.2)'}}>
-                        <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>{s.section}</span> • <span style={{color: '#fff'}}>Row {s.row}</span> • <span style={{color: '#fff'}}>Seat {s.number}</span>
+                        <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>{s.section}</span> • <span style={{color: 'var(--accent-blue)'}}>Row {s.row}</span> • <span style={{color: 'var(--accent-blue)'}}>Seat {s.number}</span>
                       </div>
                     ))}
                   </div>
