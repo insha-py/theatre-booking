@@ -435,9 +435,9 @@ body::before {
 /* ── Responsive breakpoints ──────────────────────── */
 @media (max-width: 900px) {
   :root {
-    --seat-w: clamp(12px, 2.2vw, 18px);
-    --seat-h: clamp(14px, 2.5vw, 22px);
-    --panel-gap: clamp(16px, 3vw, 32px);
+    --seat-w: clamp(16px, 3vw, 22px);
+    --seat-h: clamp(20px, 3.5vw, 26px);
+    --panel-gap: clamp(18px, 4vw, 36px);
   }
   .container { padding: 1rem; }
   .glass-panel { padding: 1.2rem; }
@@ -445,10 +445,10 @@ body::before {
 
 @media (max-width: 600px) {
   :root {
-    --seat-w: clamp(10px, 2.8vw, 14px);
-    --seat-h: clamp(12px, 3.2vw, 18px);
-    --panel-gap: 16px;
-    --row-gap: 4px;
+    --seat-w: clamp(14px, 4vw, 18px);
+    --seat-h: clamp(18px, 4.5vw, 22px);
+    --panel-gap: 20px;
+    --row-gap: 6px;
   }
   .glass-panel { padding: 1rem 0.6rem; }
   .screen { margin-bottom: 2rem; }
