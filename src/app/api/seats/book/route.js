@@ -19,8 +19,8 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Show date is required.' }, { status: 400 });
     }
 
-    if (!seatIds || !Array.isArray(seatIds) || seatIds.length === 0 || seatIds.length > 2) {
-      return NextResponse.json({ error: 'You can only select up to 2 seats.' }, { status: 400 });
+    if (!seatIds || !Array.isArray(seatIds) || seatIds.length === 0 || seatIds.length > 1) {
+      return NextResponse.json({ error: 'You can only select up to 1 seat.' }, { status: 400 });
     }
 
     // Checking max 2 seats limit logic across existing bookings FOR THIS DATE
@@ -28,8 +28,8 @@ export async function POST(request) {
       where: { userEmail: userEmail, status: 'BOOKED', showDate: showDate }
     });
     
-    if (existingBookedCount + seatIds.length > 2) {
-      return NextResponse.json({ error: `Maximum 2 seats allowed per user per show. You already have ${existingBookedCount} seats booked for this date.` }, { status: 400 });
+    if (existingBookedCount + seatIds.length > 1) {
+      return NextResponse.json({ error: `Maximum 1 seat allowed per user per show. You already have ${existingBookedCount} seat booked for this date.` }, { status: 400 });
     }
 
     // Atomic transaction simulation: Check availability mapping

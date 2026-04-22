@@ -93,16 +93,19 @@ export default function ScannerPage() {
             ) : (
               <div style={{ padding: '1.5rem', borderRadius: '12px', backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid #22c55e', marginBottom: '1.5rem' }}>
                 <h3 style={{ color: '#22c55e', marginBottom: '0.5rem' }}>SUCCESSFUL CHECK-IN</h3>
-                <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white' }}>{result?.userEmail}</p>
-                <p style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '1rem', paddingTop: '0.5rem' }}>
-                  Date: {result?.showDate}<br />
-                  Seats: {result?.seats}
-                </p>
+                <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white', wordBreak: 'break-all', overflowWrap: 'break-word' }}>{result?.userEmail}</p>
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '1rem', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{result?.showDate}</p>
+                  <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <p style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.3rem' }}>Assigned Seats</p>
+                    <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>{result?.seats}</p>
+                  </div>
+                </div>
               </div>
             )}
 
             {result && !result.loading && (
-               <div style={{ textAlign: 'left', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '1.5rem' }}>
+               <div style={{ textAlign: 'left', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '1.5rem', wordBreak: 'break-all' }}>
                  <p>User: {result.userEmail}</p>
                  <p>Show: {result.showDate}</p>
                </div>

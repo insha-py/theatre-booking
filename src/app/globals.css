@@ -426,18 +426,18 @@ body::before {
 }
 
 .legend-box {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
   flex-shrink: 0;
 }
 
 /* ── Responsive breakpoints ──────────────────────── */
 @media (max-width: 900px) {
   :root {
-    --seat-w: clamp(9px, 1.8vw, 14px);
-    --seat-h: clamp(11px, 2.1vw, 17px);
-    --panel-gap: clamp(14px, 2.5vw, 28px);
+    --seat-w: clamp(12px, 2.2vw, 18px);
+    --seat-h: clamp(14px, 2.5vw, 22px);
+    --panel-gap: clamp(16px, 3vw, 32px);
   }
   .container { padding: 1rem; }
   .glass-panel { padding: 1.2rem; }
@@ -445,10 +445,10 @@ body::before {
 
 @media (max-width: 600px) {
   :root {
-    --seat-w: clamp(7px, 2.2vw, 11px);
-    --seat-h: clamp(9px,  2.6vw, 14px);
-    --panel-gap: 12px;
-    --row-gap: 3px;
+    --seat-w: clamp(10px, 2.8vw, 14px);
+    --seat-h: clamp(12px, 3.2vw, 18px);
+    --panel-gap: 16px;
+    --row-gap: 4px;
   }
   .glass-panel { padding: 1rem 0.6rem; }
   .screen { margin-bottom: 2rem; }

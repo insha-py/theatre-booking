@@ -53,11 +53,7 @@ export default function Home() {
     if (selectedSeats.includes(id)) {
       setSelectedSeats(prev => prev.filter(s => s !== id));
     } else {
-      if (selectedSeats.length >= 2) {
-        alert("You can only select up to 2 seats.");
-        return;
-      }
-      setSelectedSeats(prev => [...prev, id]);
+      setSelectedSeats([id]); // Only allow 1 seat, replace any existing
     }
   };
 
@@ -281,7 +277,7 @@ export default function Home() {
              <button onClick={() => setStep(2)} style={{background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                ← Change Date
              </button>
-             <p style={{textAlign: 'center', color: '#94a3b8'}}>Selected: {selectedSeats.length}/2</p>
+             <p style={{textAlign: 'center', color: '#94a3b8'}}>Selected: {selectedSeats.length}/1</p>
           </div>
 
           <div className="theatre-container-boxless" style={{padding: '1.2rem'}}>
@@ -323,7 +319,7 @@ export default function Home() {
                   {loading ? 'Processing...' : 'Confirm Booking'}
                 </button>
                 <p style={{fontSize: '0.7rem', color: '#64748b', marginTop: '0.8rem', textAlign: 'center'}}>
-                  Max 2 seats per show. You are booking for {selectedDate === '2026-04-25' ? 'Saturday' : 'Sunday'}.
+                  Max 1 seat per show. You are booking for {selectedDate === '2026-04-25' ? 'Saturday' : 'Sunday'}.
                 </p>
               </div>
             </div>
