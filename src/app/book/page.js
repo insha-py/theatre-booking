@@ -7,7 +7,7 @@ import html2canvas from 'html2canvas';
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const [step, setStep] = useState(1); // 1: Login, 2: Date Selection, 3: Seats, 5: Success
+  const [step, setStep] = useState(1); // 1: Login, 2: Date Selection, 3: Seats, 4: View Booking, 5: Success
   const [loading, setLoading] = useState(false);
   
   // Date state
@@ -19,6 +19,10 @@ export default function Home() {
   
   // Booking state
   const [bookingDetails, setBookingDetails] = useState(null);
+  
+  // User bookings state
+  const [userBookings, setUserBookings] = useState([]);
+  const [viewingBooking, setViewingBooking] = useState(null);
 
   // Auto login/redirect logic
   useEffect(() => {
@@ -28,6 +32,13 @@ export default function Home() {
       setStep(1);
     }
   }, [status, step]);
+
+  // Fetch user bookings when reaching step 2
+  useEffect(() => {
+    if (step === 2 && status === 'authenticated') {
+      fetchUserBookings();
+    }
+  }, [step, status]);
 
   // Initial fetch for seats when we reach step 3
   useEffect(() => {
@@ -47,6 +58,22 @@ export default function Home() {
     } catch(err) {
       console.error('Fetch error:', err);
     }
+  };
+
+  const fetchUserBookings = async () => {
+    try {
+      const res = await fetch('/api/bookings/user');
+      const data = await res.json();
+      if (data.bookings) {
+        setUserBookings(data.bookings);
+      }
+    } catch(err) {
+      console.error('Error fetching bookings:', err);
+    }
+  };
+
+  const getBookingForDate = (date) => {
+    return userBookings.find(b => b.showDate === date);
   };
 
   const toggleSeat = (id, seatStatus) => {
@@ -220,22 +247,44 @@ export default function Home() {
               SATURDAY OR SUNDAY?
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <button 
-                  onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
-                  className="button"
-                  style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
-                >
-                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
-              </button>
-                <button 
-                  onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
-                  className="button"
-                  style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
-                >
-                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
-              </button>
+                <div>
+                  <button 
+                    onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
+                    className="button"
+                    style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem', width: '100%' }}
+                  >
+                    <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
+                  </button>
+                  {getBookingForDate('2026-04-25') && (
+                    <button 
+                      onClick={() => { setViewingBooking(getBookingForDate('2026-04-25')); setStep(4); }} 
+                      className="button"
+                      style={{ marginTop: '0.5rem', background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.9rem', width: '100%' }}
+                    >
+                      📋 View My Ticket
+                    </button>
+                  )}
+                </div>
+                <div>
+                  <button 
+                    onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
+                    className="button"
+                    style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem', width: '100%' }}
+                  >
+                    <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
+                  </button>
+                  {getBookingForDate('2026-04-26') && (
+                    <button 
+                      onClick={() => { setViewingBooking(getBookingForDate('2026-04-26')); setStep(4); }} 
+                      className="button"
+                      style={{ marginTop: '0.5rem', background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.9rem', width: '100%' }}
+                    >
+                      📋 View My Ticket
+                    </button>
+                  )}
+                </div>
               <button 
                 onClick={() => signOut()} 
                 style={{ marginTop: '1rem', background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
@@ -304,6 +353,70 @@ export default function Home() {
                   Max 1 seat per show. You are booking for {selectedDate === '2026-04-25' ? 'Saturday' : 'Sunday'}.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {step === 4 && (
+        <div className="animate-fade-in" style={{width: '100%', maxWidth: '500px', margin: '0 auto'}}>
+          <div 
+            style={{
+              textAlign: 'center', 
+              padding: '2.5rem', 
+              background: '#ffffff',
+              borderRadius: '16px',
+              border: '1px solid var(--border)',
+              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'
+            }}
+          >
+            <div className="three-line-title" style={{marginBottom: '0'}}>
+              <h2 className="three-line-3">YOUR TICKET</h2>
+            </div>
+            
+            <div className="ticket-card" style={{marginBottom: '2rem', textAlign: 'left', padding: '1.5rem', background: 'rgba(0,0,0,0.02)', borderRadius: '12px', border: '1px solid rgba(156, 25, 88, 0.1)'}}>
+              <p style={{color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1.2rem', letterSpacing: '1px', borderBottom: '1px solid rgba(156, 25, 88, 0.1)', paddingBottom: '0.5rem'}}>Booking Details</p>
+              
+              <div style={{marginBottom: '1.2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap'}}>
+                <div>
+                  <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Show Date:</p>
+                  <p style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent-blue)'}}>{viewingBooking?.showDate === '2026-04-25' ? '25th April (Saturday)' : '26th April (Sunday)'}</p>
+                </div>
+                <div style={{minWidth: '150px'}}>
+                  <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Booking ID:</p>
+                  <p style={{fontSize: '0.85rem', color: 'var(--accent-blue)', wordBreak: 'break-all', fontFamily: 'monospace'}}>{viewingBooking?.id}</p>
+                </div>
+              </div>
+
+              <div style={{marginTop: '1rem'}}>
+                <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.8rem'}}>Your Seats:</p>
+                {viewingBooking?.seats && Array.isArray(viewingBooking.seats) && viewingBooking.seats.length > 0 ? (
+                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.8rem'}}>
+                    {viewingBooking.seats.map((s, i) => (
+                      <div key={i} style={{background: 'rgba(156, 25, 88, 0.05)', border: '1px solid var(--primary)', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)'}}>
+                        <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>{s.section}</span> • <span style={{color: 'var(--accent-blue)'}}>Row {s.row}</span> • <span style={{color: 'var(--accent-blue)'}}>Seat {s.number}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>{viewingBooking?.seats}</p>
+                )}
+              </div>
+
+              <div style={{marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(156, 25, 88, 0.1)'}}>
+                <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem'}}>Booked on:</p>
+                <p style={{fontSize: '0.9rem', color: 'var(--accent-blue)'}}>{new Date(viewingBooking?.createdAt).toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem'}}>
+              <button 
+                className="button" 
+                style={{background: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)'}}
+                onClick={() => { setStep(2); setViewingBooking(null); }}
+              >
+                ← Back to Dates
+              </button>
             </div>
           </div>
         </div>
