@@ -247,22 +247,44 @@ export default function Home() {
               SATURDAY OR SUNDAY?
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <button 
-                  onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <button
+                  onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }}
                   className="button"
                   style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
                 >
                   <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
-              </button>
-                <button 
-                  onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
+                  <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
+                </button>
+                {getBookingForDate('2026-04-25') && (
+                  <button
+                    onClick={() => { setViewingBooking(getBookingForDate('2026-04-25')); setStep(4); }}
+                    className="button"
+                    style={{ background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.85rem', padding: '0.6rem 1rem' }}
+                  >
+                    📋 View My Ticket (Saturday)
+                  </button>
+                )}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <button
+                  onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }}
                   className="button"
                   style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
                 >
                   <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
-              </button>
+                  <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
+                </button>
+                {getBookingForDate('2026-04-26') && (
+                  <button
+                    onClick={() => { setViewingBooking(getBookingForDate('2026-04-26')); setStep(4); }}
+                    className="button"
+                    style={{ background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.85rem', padding: '0.6rem 1rem' }}
+                  >
+                    📋 View My Ticket (Sunday)
+                  </button>
+                )}
+              </div>
               <button 
                 onClick={() => signOut()} 
                 style={{ marginTop: '1rem', background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
@@ -287,15 +309,6 @@ export default function Home() {
                ← Change Date
              </button>
              <p style={{textAlign: 'center', color: '#94a3b8'}}>Selected: {selectedSeats.length}/1</p>
-             {getBookingForDate(selectedDate) && (
-               <button 
-                 onClick={() => { setViewingBooking(getBookingForDate(selectedDate)); setStep(4); }} 
-                 className="button"
-                 style={{ background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.85rem', padding: '0.6rem 1rem' }}
-               >
-                 📋 View My Ticket
-               </button>
-             )}
           </div>
 
           <div className="theatre-container-boxless" style={{padding: '1.2rem'}}>
