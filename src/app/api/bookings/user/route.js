@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import QRCode from 'qrcode';
 
 export async function GET(request) {
   try {
@@ -27,9 +28,20 @@ export async function GET(request) {
           where: { id: { in: seatIds } },
           select: { section: true, row: true, number: true }
         });
+        let qrCode = booking.qrCode;
+        if (!qrCode) {
+          try {
+            const qrText = `Booking ID: ${booking.id}\nDate: ${booking.showDate}\nSeats: ${seats.map(s => `${s.section} R${s.row} S${s.number}`).join(', ')}\nEmail: ${booking.userEmail}`;
+            qrCode = await QRCode.toDataURL(qrText);
+            await prisma.booking.update({ where: { id: booking.id }, data: { qrCode } });
+          } catch {
+            qrCode = null;
+          }
+        }
         return {
           ...booking,
-          seats: seats
+          seats,
+          qrCode
         };
       })
     );
