@@ -33,12 +33,12 @@ export default function Home() {
     }
   }, [status, step]);
 
-  // Fetch user bookings when reaching step 2
+  // Fetch user bookings when authenticated
   useEffect(() => {
-    if (step === 2 && status === 'authenticated') {
+    if (status === 'authenticated') {
       fetchUserBookings();
     }
-  }, [step, status]);
+  }, [status]);
 
   // Initial fetch for seats when we reach step 3
   useEffect(() => {
