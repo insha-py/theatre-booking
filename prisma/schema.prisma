@@ -27,5 +27,6 @@ model Booking {
   status     String    @default("CONFIRMED")
   checkedIn  Boolean   @default(false)
   attendedAt DateTime?
+  qrCode     String?   // Data URL of QR code
   createdAt  DateTime  @default(now())
 }

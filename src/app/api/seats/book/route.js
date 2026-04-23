@@ -57,7 +57,7 @@ export async function POST(request) {
       data: { status: 'BOOKED', lockedUntil: null, userEmail }
     });
 
-    // Create a confirmed booking immediately
+    // Create a confirmed booking immediately (without QR code initially)
     const booking = await prisma.booking.create({
       data: {
         userEmail,
@@ -76,6 +76,12 @@ export async function POST(request) {
     // Generate QR Code containing booking ID and details
     const qrText = `Booking ID: ${booking.id}\nDate: ${showDate}\nSeats: ${bookedSeats.map(s => `${s.section} R${s.row} S${s.number}`).join(', ')}\nEmail: ${userEmail}`;
     const qrCodeDataUrl = await QRCode.toDataURL(qrText);
+
+    // Update booking with QR code
+    await prisma.booking.update({
+      where: { id: booking.id },
+      data: { qrCode: qrCodeDataUrl }
+    });
 
     return NextResponse.json({ 
       message: 'Booking confirmed', 

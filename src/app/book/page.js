@@ -247,44 +247,22 @@ export default function Home() {
               SATURDAY OR SUNDAY?
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div>
-                  <button 
-                    onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
-                    className="button"
-                    style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem', width: '100%' }}
-                  >
-                    <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
-                  </button>
-                  {getBookingForDate('2026-04-25') && (
-                    <button 
-                      onClick={() => { setViewingBooking(getBookingForDate('2026-04-25')); setStep(4); }} 
-                      className="button"
-                      style={{ marginTop: '0.5rem', background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.9rem', width: '100%' }}
-                    >
-                      📋 View My Ticket
-                    </button>
-                  )}
-                </div>
-                <div>
-                  <button 
-                    onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
-                    className="button"
-                    style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem', width: '100%' }}
-                  >
-                    <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
-                  </button>
-                  {getBookingForDate('2026-04-26') && (
-                    <button 
-                      onClick={() => { setViewingBooking(getBookingForDate('2026-04-26')); setStep(4); }} 
-                      className="button"
-                      style={{ marginTop: '0.5rem', background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.9rem', width: '100%' }}
-                    >
-                      📋 View My Ticket
-                    </button>
-                  )}
-                </div>
+                <button 
+                  onClick={() => { setSelectedDate('2026-04-25'); setStep(3); }} 
+                  className="button"
+                  style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
+                >
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>25th April</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SATURDAY</div>
+              </button>
+                <button 
+                  onClick={() => { setSelectedDate('2026-04-26'); setStep(3); }} 
+                  className="button"
+                  style={{ background: 'rgba(0,0,0,0.03)', color: 'var(--accent-blue)', border: '1px solid var(--primary)', textAlign: 'left', padding: '1.5rem' }}
+                >
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>26th April</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>SUNDAY</div>
+              </button>
               <button 
                 onClick={() => signOut()} 
                 style={{ marginTop: '1rem', background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
@@ -304,11 +282,20 @@ export default function Home() {
             <span className="three-line-3">Seat</span>
           </div>
           
-          <div style={{display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '1rem'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem'}}>
              <button onClick={() => setStep(2)} style={{background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                ← Change Date
              </button>
              <p style={{textAlign: 'center', color: '#94a3b8'}}>Selected: {selectedSeats.length}/1</p>
+             {getBookingForDate(selectedDate) && (
+               <button 
+                 onClick={() => { setViewingBooking(getBookingForDate(selectedDate)); setStep(4); }} 
+                 className="button"
+                 style={{ background: 'rgba(156, 25, 88, 0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', fontSize: '0.85rem', padding: '0.6rem 1rem' }}
+               >
+                 📋 View My Ticket
+               </button>
+             )}
           </div>
 
           <div className="theatre-container-boxless" style={{padding: '1.2rem'}}>
@@ -382,9 +369,9 @@ export default function Home() {
                   <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Show Date:</p>
                   <p style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent-blue)'}}>{viewingBooking?.showDate === '2026-04-25' ? '25th April (Saturday)' : '26th April (Sunday)'}</p>
                 </div>
-                <div style={{minWidth: '150px'}}>
-                  <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Booking ID:</p>
-                  <p style={{fontSize: '0.85rem', color: 'var(--accent-blue)', wordBreak: 'break-all', fontFamily: 'monospace'}}>{viewingBooking?.id}</p>
+                <div>
+                  <p style={{fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.2rem'}}>Email:</p>
+                  <p style={{fontSize: '0.9rem', color: 'var(--accent-blue)', wordBreak: 'break-all'}}>{viewingBooking?.userEmail}</p>
                 </div>
               </div>
 
@@ -408,6 +395,19 @@ export default function Home() {
                 <p style={{fontSize: '0.9rem', color: 'var(--accent-blue)'}}>{new Date(viewingBooking?.createdAt).toLocaleString()}</p>
               </div>
             </div>
+
+            {viewingBooking?.qrCode && (
+              <div style={{background: 'white', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '1rem', boxShadow: '0 0 20px rgba(0,0,0,0.1)'}}>
+                <img 
+                  src={viewingBooking.qrCode} 
+                  alt="Your Ticket QR" 
+                  width={220} 
+                  height={220} 
+                  style={{display: 'block'}} 
+                  crossOrigin="anonymous" 
+                />
+              </div>
+            )}
 
             <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem'}}>
               <button 
